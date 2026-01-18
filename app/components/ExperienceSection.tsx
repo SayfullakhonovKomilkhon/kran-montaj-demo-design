@@ -117,19 +117,6 @@ export default function ExperienceSection() {
     }
   ];
 
-  // Crane SVG fallback icons
-  const craneSvgIcons = [
-    <svg key="crane1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-16 h-16 text-gray-400">
-      <path d="M21 10H3M21 10V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V10M21 10L15.5 3.5C15.1673 3.1673 14.6836 3 14.1716 3H9.82843C9.31641 3 8.83266 3.1673 8.5 3.5L3 10M17 16C17 16.5523 16.5523 17 16 17C15.4477 17 15 16.5523 15 16C15 15.4477 15.4477 15 16 15C16.5523 15 17 15.4477 17 16ZM9 16C9 16.5523 8.55229 17 8 17C7.44772 17 7 16.5523 7 16C7 15.4477 7.44772 15 8 15C8.55229 15 9 15.4477 9 16Z" />
-    </svg>,
-    <svg key="crane2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-16 h-16 text-gray-400">
-      <path d="M9 21H6C4.34315 21 3 19.6569 3 18V16.5M9 21L11 19M9 21V18M15 21H18C19.6569 21 21 19.6569 21 18V16.5M15 21L13 19M15 21V18M3 16.5V6C3 4.34315 4.34315 3 6 3H9M3 16.5H9M21 16.5V6C21 4.34315 19.6569 3 18 3H15M21 16.5H15M9 3L11 5M9 3V6M15 3L13 5M15 3V6M9 6H15M9 12H15M9 18H15" />
-    </svg>,
-    <svg key="crane3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-16 h-16 text-gray-400">
-      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-    </svg>
-  ];
-
   // Handle image loading errors
   const [imgErrors, setImgErrors] = useState<{[key: string]: boolean}>({});
   
@@ -182,47 +169,53 @@ export default function ExperienceSection() {
   return (
     <section 
       id="experienceSection" 
-      className="py-20 relative overflow-hidden"
+      className="py-20 relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
       ref={sectionRef}
-      style={{
-        position: 'relative',
-      }}
     >
-      {/* Background overlay with subtle parallax */}
-      <div 
-        className="absolute inset-0 z-0 bg-fixed" 
-        style={{
-          backgroundImage: 'url("/img/services/contact-bg.png")', 
-          backgroundSize: 'cover', 
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          filter: 'brightness(0.85) contrast(1.1)', 
-          transform: isVisible ? 'scale(1)' : 'scale(1.05)',
-          transition: 'transform 1.2s ease-out, filter 1.2s ease-out',
-        }}
-      />
+      {/* Industrial grid pattern */}
+      <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
       
-      {/* Content with semi-transparent overlay for better readability */}
+      {/* Diagonal stripes accent */}
+      <div className="absolute top-0 left-0 w-96 h-96 opacity-10">
+        <div className="absolute inset-0" style={{backgroundImage: 'repeating-linear-gradient(45deg, #f59e0b, #f59e0b 2px, transparent 2px, transparent 20px)'}}></div>
+      </div>
+      
+      {/* Glowing orbs */}
+      <div className="absolute top-1/4 left-10 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-10 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl"></div>
+      
+      {/* Content */}
       <div className={`relative z-10 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.8s ease-out 0.3s' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
           {/* 15 years badge and heading */}
-          <div className={`flex flex-col items-center mb-20 ${isVisible ? 'fade-in' : 'opacity-0'}`}>
-            <div className="w-28 h-28 relative mb-8 floating">
-              <Image
-                src="/img/services/15years-garanty.png"
-                alt="15 лет гарантии"
-                fill
-                className="object-contain"
-                priority
-              />
+          <div className={`flex flex-col items-center mb-16 ${isVisible ? 'fade-in' : 'opacity-0'}`}>
+            {/* Badge */}
+            <div className="w-32 h-32 relative mb-8 floating">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-2xl shadow-2xl shadow-orange-500/30 flex items-center justify-center">
+                <div className="text-center">
+                  <span className="text-5xl font-black text-white">15</span>
+                  <span className="block text-xs font-bold text-white/80 uppercase tracking-wider">лет</span>
+                </div>
+              </div>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-bold text-center max-w-3xl mx-auto text-white section-heading">
-              15 лет опыта в разработке грузоподъемного оборудования
+            
+            <h2 className="text-2xl sm:text-4xl font-black text-center max-w-3xl mx-auto text-white section-heading uppercase tracking-tight">
+              Опыта в разработке{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
+                грузоподъемного оборудования
+              </span>
             </h2>
+            
+            {/* Industrial underline */}
+            <div className="flex items-center justify-center mt-6 space-x-2">
+              <div className="w-8 h-0.5 bg-gray-600 rounded"></div>
+              <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded"></div>
+              <div className="w-8 h-0.5 bg-gray-600 rounded"></div>
+            </div>
           </div>
 
           {/* Crane images slider */}
-          <div className={`relative mb-20 ${isVisible ? 'fade-in fade-in-delay-1' : 'opacity-0'} overflow-hidden`}>
+          <div className={`relative mb-16 ${isVisible ? 'fade-in fade-in-delay-1' : 'opacity-0'} overflow-hidden`}>
             <div className="mb-10 relative carousel-container">
               <Swiper
                 ref={swiperRef}
@@ -242,8 +235,8 @@ export default function ExperienceSection() {
                 pagination={{ 
                   clickable: true,
                   el: '.swiper-pagination',
-                  bulletClass: 'inline-block w-3 h-3 rounded-full bg-white/70 mx-1 cursor-pointer transition-all',
-                  bulletActiveClass: '!bg-yellow-500 scale-125',
+                  bulletClass: 'inline-block w-3 h-3 rounded-full bg-white/50 mx-1 cursor-pointer transition-all',
+                  bulletActiveClass: '!bg-gradient-to-r from-orange-500 to-yellow-500 scale-125',
                 }}
                 autoplay={{
                   delay: 5000,
@@ -277,41 +270,47 @@ export default function ExperienceSection() {
               >
                 {craneImages.map((crane) => (
                   <SwiperSlide key={crane.id}>
-                    <div className="flip-card-container">
-                      <div className="flip-card">
-                        <div className="flip-card-front">
-                          {imgErrors[`crane-${crane.id}`] ? (
-                            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                              <div className="w-16 h-16 flex items-center justify-center">
-                                {craneSvgIcons[(crane.id % 3)]}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="relative w-full h-full overflow-hidden">
-                              <Image
-                                src={crane.image}
-                                alt={crane.title}
-                                fill
-                                className="object-cover"
-                                onError={() => handleImageError(`crane-${crane.id}`)}
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                              />
-                              <div className="absolute bottom-4 right-4">
-                                <div className="crane-label">
-                                  {crane.title}
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                    <div className="bg-white rounded-xl overflow-hidden shadow-xl border border-gray-200 group cursor-pointer hover:shadow-2xl transition-all duration-500">
+                      {/* Top accent bar */}
+                      <div className="h-1 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500"></div>
+                      
+                      <div className="relative h-64 overflow-hidden">
+                        {imgErrors[`crane-${crane.id}`] ? (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <path d="M21 10H3M21 10V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V10M21 10L15.5 3.5C15.1673 3.1673 14.6836 3 14.1716 3H9.82843C9.31641 3 8.83266 3.1673 8.5 3.5L3 10" />
+                            </svg>
+                          </div>
+                        ) : (
+                          <Image
+                            src={crane.image}
+                            alt={crane.title}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            onError={() => handleImageError(`crane-${crane.id}`)}
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          />
+                        )}
+                        
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
+                        
+                        {/* Badge */}
+                        <div className="absolute top-4 left-4">
+                          <div className="bg-gradient-to-r from-orange-500 to-yellow-500 px-3 py-1 rounded-lg text-white text-xs font-bold uppercase tracking-wider shadow-lg">
+                            Проект #{crane.id}
+                          </div>
                         </div>
-                        <div className="flip-card-back">
-                          <h3 className="text-xl font-bold mb-4 text-black">{crane.title}</h3>
-                          <p className="text-gray-800">{crane.description}</p>
-                          <button className="mt-4 bg-white hover:bg-gray-100 text-black font-bold py-2 px-6 rounded shadow transition-all duration-300">
-                            Подробнее
-                          </button>
+                        
+                        {/* Title */}
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <h3 className="text-white font-bold text-lg">{crane.title}</h3>
+                          <p className="text-gray-300 text-sm mt-1 line-clamp-2">{crane.description}</p>
                         </div>
                       </div>
+                      
+                      {/* Bottom bar */}
+                      <div className="h-1 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700"></div>
                     </div>
                   </SwiperSlide>
                 ))}
@@ -321,7 +320,7 @@ export default function ExperienceSection() {
               <button 
                 ref={prevRef}
                 onClick={handlePrevClick}
-                className="absolute top-1/2 left-4 z-20 transform -translate-y-1/2 hidden md:flex items-center justify-center focus:outline-none transition-all w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm text-yellow-500 hover:bg-white/60 hover:text-yellow-600"
+                className="absolute top-1/2 left-4 z-20 transform -translate-y-1/2 hidden md:flex items-center justify-center focus:outline-none transition-all w-12 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 shadow-lg shadow-orange-500/30"
                 aria-label="Previous slide"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
@@ -331,7 +330,7 @@ export default function ExperienceSection() {
               <button 
                 ref={nextRef}
                 onClick={handleNextClick}
-                className="absolute top-1/2 right-4 z-20 transform -translate-y-1/2 hidden md:flex items-center justify-center focus:outline-none transition-all w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm text-yellow-500 hover:bg-white/60 hover:text-yellow-600"
+                className="absolute top-1/2 right-4 z-20 transform -translate-y-1/2 hidden md:flex items-center justify-center focus:outline-none transition-all w-12 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 shadow-lg shadow-orange-500/30"
                 aria-label="Next slide"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
@@ -344,10 +343,17 @@ export default function ExperienceSection() {
             <div className="swiper-pagination flex justify-center items-center py-2"></div>
           </div>
 
-          {/* Partner logos - NEW IMPLEMENTATION */}
+          {/* Partner logos */}
           <div className={`mt-16 mb-6 ${isVisible ? 'fade-in fade-in-delay-2' : 'opacity-0'} overflow-hidden`}>
-            <h3 className="text-xl sm:text-2xl font-bold text-center mb-10 text-white section-heading">
-              Наши партнеры
+            <div className="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-gray-800 text-orange-400 border border-gray-700 mx-auto mb-6 flex justify-center w-fit">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+              </svg>
+              Партнёры
+            </div>
+            
+            <h3 className="text-xl sm:text-2xl font-black text-center mb-10 text-white section-heading">
+              Нам <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">доверяют</span>
             </h3>
             
             <div className="logo-scroll">
@@ -355,7 +361,7 @@ export default function ExperienceSection() {
                 {/* First set of logos */}
                 {clientLogos.map((client) => (
                   <div key={client.id} className="logo-item">
-                    <div className="logo-item-inner">
+                    <div className="logo-item-inner bg-white rounded-xl shadow-lg border border-gray-200 p-4 hover:shadow-xl transition-all duration-300">
                       {imgErrors[`client-${client.id}`] ? (
                         <div className="flex items-center justify-center h-full">
                           <span className="text-gray-700 font-medium">{client.name}</span>
@@ -365,7 +371,7 @@ export default function ExperienceSection() {
                           src={client.image}
                           alt={client.name}
                           fill
-                          className="object-contain mx-auto transition-all duration-300 hover:scale-105"
+                          className="object-contain mx-auto transition-all duration-300 hover:scale-105 p-2"
                           onError={() => handleImageError(`client-${client.id}`)}
                           sizes="(max-width: 640px) 120px, (max-width: 768px) 130px, 140px"
                         />
@@ -377,7 +383,7 @@ export default function ExperienceSection() {
                 {/* Second set of logos (duplicate for continuous scroll) */}
                 {clientLogos.map((client) => (
                   <div key={`duplicate-${client.id}`} className="logo-item">
-                    <div className="logo-item-inner">
+                    <div className="logo-item-inner bg-white rounded-xl shadow-lg border border-gray-200 p-4 hover:shadow-xl transition-all duration-300">
                       {imgErrors[`client-${client.id}`] ? (
                         <div className="flex items-center justify-center h-full">
                           <span className="text-gray-700 font-medium">{client.name}</span>
@@ -387,7 +393,7 @@ export default function ExperienceSection() {
                           src={client.image}
                           alt={client.name}
                           fill
-                          className="object-contain mx-auto transition-all duration-300 hover:scale-105"
+                          className="object-contain mx-auto transition-all duration-300 hover:scale-105 p-2"
                           onError={() => handleImageError(`client-${client.id}`)}
                           sizes="(max-width: 640px) 120px, (max-width: 768px) 130px, 140px"
                         />
@@ -400,6 +406,9 @@ export default function ExperienceSection() {
           </div>
         </div>
       </div>
+      
+      {/* Bottom edge */}
+      <div className="absolute left-0 right-0 bottom-0 h-1.5 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500"></div>
     </section>
   );
-} 
+}

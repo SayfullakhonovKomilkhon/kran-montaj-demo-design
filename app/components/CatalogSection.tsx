@@ -11,7 +11,25 @@ interface Product {
   title: string;
   description: string;
   image_url: string | null;
-  price: number | null;
+  price: number | string | null;
+}
+
+// Helper function to format price (handles both number and string with "от")
+function formatPrice(price: number | string | null): string {
+  if (!price) return '';
+  
+  // If price is a string that already contains "от", just return it formatted
+  if (typeof price === 'string') {
+    const cleanPrice = price.replace(/от\s*/gi, '').trim();
+    const numPrice = parseFloat(cleanPrice.replace(/\s/g, ''));
+    if (!isNaN(numPrice)) {
+      return `от ${numPrice.toLocaleString()} сум`;
+    }
+    return price;
+  }
+  
+  // If price is a number, format it
+  return `от ${price.toLocaleString()} сум`;
 }
 
 export default function CatalogSection() {
@@ -75,75 +93,94 @@ export default function CatalogSection() {
   };
 
   return (
-    <div className="py-12 sm:py-16 bg-white relative">
-      {/* Background crane image positioned on the right */}
-      <div 
-        className="absolute top-0 right-0 w-1/2 h-full z-0 opacity-40 pointer-events-none hidden md:block"
-        style={{
-          backgroundImage: 'url(/img/services/catalog-background.png)',
-          backgroundPosition: 'right center',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'contain'
-        }}
-        data-aos="fade-left"
-        data-aos-duration="1000"
-      />
+    <div className="py-16 sm:py-24 bg-gradient-to-b from-slate-50 to-gray-100 relative overflow-hidden">
+      {/* Industrial background elements */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{backgroundImage: 'linear-gradient(#1f2937 1px, transparent 1px), linear-gradient(90deg, #1f2937 1px, transparent 1px)', backgroundSize: '50px 50px'}}></div>
+      
+      {/* Diagonal accent */}
+      <div className="absolute top-0 right-0 w-96 h-96 opacity-5">
+        <div className="absolute inset-0" style={{backgroundImage: 'repeating-linear-gradient(45deg, #f59e0b, #f59e0b 2px, transparent 2px, transparent 20px)'}}></div>
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div 
-          className="text-center mb-10 sm:mb-16 relative z-10"
-          data-aos="fade-up"
-        >
+        {/* Section header */}
+        <div className="text-center mb-12 sm:mb-16 relative z-10" data-aos="fade-up">
+          <div className="inline-flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+          </div>
           <h2 
-            className="text-2xl sm:text-3xl font-extrabold text-gray-900 md:text-4xl"
+            className="text-2xl sm:text-3xl font-black text-gray-900 md:text-4xl uppercase tracking-tight"
             data-aos="fade-up"
             data-aos-delay="100"
           >
-            Каталог
+            Наш <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500">каталог</span>
           </h2>
+          <div className="flex items-center justify-center mt-4 space-x-2">
+            <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded"></div>
+            <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+          </div>
+          <p className="mt-4 text-gray-500 max-w-xl mx-auto">Надёжное грузоподъёмное оборудование для вашего производства</p>
         </div>
 
         {loading ? (
           <div className="flex justify-center items-center py-16">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mb-4"></div>
-              <p className="text-gray-700 font-medium">Загрузка продуктов...</p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-3 border-b-3 border-orange-500 mb-4"></div>
+              <p className="text-gray-700 font-bold">Загрузка оборудования...</p>
             </div>
           </div>
         ) : error ? (
           <div className="text-center py-10">
-            <p className="text-red-500 text-lg">{error}</p>
+            <p className="text-red-500 text-lg font-semibold">{error}</p>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-xl">Нет доступных продуктов</p>
+            <p className="text-gray-500 text-xl font-semibold">Нет доступных продуктов</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 relative z-10">
             {products.map((product, index) => (
               <div 
                 key={product.id} 
-                className="bg-white rounded-lg shadow-lg p-6 flex flex-col hover:shadow-xl transition-shadow border border-gray-100"
+                className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-200"
                 data-aos="fade-up"
-                data-aos-delay={150 * (index + 1)}
-                data-aos-duration="700"
+                data-aos-delay={100 * (index + 1)}
+                data-aos-duration="600"
               >
-                <div 
-                  className="mb-5 flex justify-center h-48 bg-gray-50 rounded-lg p-4 relative"
-                  data-aos="zoom-in"
-                  data-aos-delay={200 * (index + 1)}
-                >
+                {/* Top accent bar */}
+                <div className="h-1.5 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500"></div>
+                
+                {/* Image container */}
+                <div className="h-48 bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100 relative overflow-hidden">
+                  {/* Grid pattern */}
+                  <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(#1f2937 1px, transparent 1px), linear-gradient(90deg, #1f2937 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
+                  
+                  {/* Industrial badge */}
+                  <div className="absolute top-3 right-3 z-10">
+                    <div className="bg-gray-800 text-yellow-400 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                      </svg>
+                      Кран
+                    </div>
+                  </div>
+                  
                   {imgErrors[product.id] || !product.image_url ? (
                     <div className="flex items-center justify-center w-full h-full">
                       {fallbackIcons[index % fallbackIcons.length]}
                     </div>
                   ) : (
-                    <div className="relative w-full h-full">
+                    <div className="relative w-full h-full transform duration-500 group-hover:scale-110">
                       <Image
                         src={product.image_url}
                         alt={product.title}
                         fill
-                        className="object-contain"
+                        className="object-contain p-4"
                         onError={() => handleImageError(product.id)}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
@@ -151,46 +188,43 @@ export default function CatalogSection() {
                   )}
                 </div>
                 
-                <div>
-                  <h3 
-                    className="font-bold text-lg text-gray-900 mb-2"
-                    data-aos="fade-up"
-                    data-aos-delay={250 * (index + 1)}
-                  >
+                {/* Content */}
+                <div className="p-5">
+                  <h3 className="font-bold text-lg text-gray-800 group-hover:text-orange-600 transition-colors mb-2">
                     {product.title}
                   </h3>
-                  <p 
-                    className="text-gray-600 text-sm mb-4"
-                    data-aos="fade-up"
-                    data-aos-delay={300 * (index + 1)}
-                  >
+                  <p className="text-gray-500 text-sm mb-4 line-clamp-2">
                     {product.description}
                   </p>
                   {product.price && (
-                    <p 
-                      className="text-amber-600 font-semibold text-sm"
-                      data-aos="fade-up"
-                      data-aos-delay={350 * (index + 1)}
-                    >
-                      <span>от {product.price.toLocaleString()} сум</span>
-                    </p>
+                    <div className="inline-flex items-center bg-gradient-to-r from-gray-800 to-gray-700 px-3 py-1.5 rounded-lg">
+                      <span className="text-yellow-400 font-bold text-sm">
+                        {formatPrice(product.price)}
+                      </span>
+                    </div>
                   )}
                 </div>
+                
+                {/* Bottom bar */}
+                <div className="h-1 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700"></div>
               </div>
             ))}
           </div>
         )}
 
-        <div 
-          className="flex justify-center mt-10 relative z-10"
-          data-aos="fade-up"
-          data-aos-delay="400"
-        >
+        {/* CTA button */}
+        <div className="flex justify-center mt-12 relative z-10" data-aos="fade-up" data-aos-delay="400">
           <Link 
             href="/catalog" 
-            className="inline-flex items-center justify-center px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-full transition-colors"
+            className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 uppercase tracking-wide"
           >
-            Подробнее
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            Смотреть весь каталог
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
           </Link>
         </div>
       </div>

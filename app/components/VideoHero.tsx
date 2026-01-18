@@ -7,8 +7,8 @@ const SUPABASE_VIDEO_URL = 'https://rgpdolopvlfdiutwlvow.supabase.co/storage/v1/
 
 export default function VideoHero() {
   return (
-    <div className="relative h-screen w-full overflow-hidden -mt-[120px] md:-mt-[130px]">
-      {/* Video background - показывается сразу */}
+    <div className="relative min-h-screen w-full overflow-hidden -mt-[120px] md:-mt-[130px]">
+      {/* Video background */}
       <video 
         autoPlay 
         loop 
@@ -20,40 +20,46 @@ export default function VideoHero() {
         <source src={SUPABASE_VIDEO_URL} type="video/mp4" />
       </video>
       
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60 z-0"></div>
+      {/* Dark industrial overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/40 to-gray-900/80 z-0"></div>
+      
       
       {/* Stats - positioned near bottom */}
-      <div className="absolute bottom-28 left-0 right-0 z-10 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-          <div className="text-center">
-            <p className="text-3xl sm:text-4xl font-bold text-amber-400">15+</p>
-            <p className="text-gray-400 text-sm mt-1">Лет опыта</p>
+      <div className="absolute bottom-32 left-0 right-0 z-10 px-4 sm:px-6 lg:px-8">
+        <div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+          data-aos="fade-up"
+          data-aos-delay="200"
+          data-aos-duration="800"
+        >
+          <div className="text-center p-4 bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-700/50">
+            <div className="text-3xl sm:text-4xl font-black text-orange-400">15+</div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">Лет опыта</div>
           </div>
-          <div className="text-center">
-            <p className="text-3xl sm:text-4xl font-bold text-amber-400">500+</p>
-            <p className="text-gray-400 text-sm mt-1">Проектов</p>
+          <div className="text-center p-4 bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-700/50">
+            <div className="text-3xl sm:text-4xl font-black text-yellow-400">500+</div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">Проектов</div>
           </div>
-          <div className="text-center">
-            <p className="text-3xl sm:text-4xl font-bold text-amber-400">250+</p>
-            <p className="text-gray-400 text-sm mt-1">Клиентов</p>
+          <div className="text-center p-4 bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-700/50">
+            <div className="text-3xl sm:text-4xl font-black text-orange-400">250+</div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">Клиентов</div>
           </div>
-          <div className="text-center">
-            <p className="text-3xl sm:text-4xl font-bold text-amber-400">24/7</p>
-            <p className="text-gray-400 text-sm mt-1">Поддержка</p>
+          <div className="text-center p-4 bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-700/50">
+            <div className="text-3xl sm:text-4xl font-black text-yellow-400">24/7</div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">Поддержка</div>
           </div>
         </div>
       </div>
       
       {/* Scroll indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-        <div className="flex flex-col items-center text-white/60 animate-bounce">
-          <span className="text-xs mb-2">Листайте вниз</span>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+        <div className="w-6 h-10 border-2 border-gray-500 rounded-full flex justify-center pt-2">
+          <div className="w-1.5 h-3 bg-orange-500 rounded-full animate-pulse"></div>
         </div>
       </div>
+      
+      {/* Bottom accent bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 z-10"></div>
     </div>
   );
-} 
+}

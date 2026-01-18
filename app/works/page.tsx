@@ -67,14 +67,14 @@ function VideoThumbnail({
   return (
     <div
       onClick={onClick}
-      className={`group cursor-pointer rounded-xl transition-all duration-300 border-2 ${
+      className={`group cursor-pointer rounded-lg transition-all duration-300 overflow-hidden flex ${
         isSelected 
-          ? 'border-amber-500 shadow-lg bg-amber-50' 
-          : 'border-transparent hover:border-amber-300 hover:shadow-md bg-white'
+          ? 'bg-orange-50 ring-2 ring-orange-500' 
+          : 'bg-white hover:bg-gray-50 border border-gray-200 hover:border-orange-300'
       }`}
     >
-      {/* Video thumbnail */}
-      <div className="relative aspect-video bg-gray-900 rounded-t-lg overflow-hidden">
+      {/* Thumbnail - Fixed 16:9 aspect ratio */}
+      <div className="relative w-32 sm:w-36 flex-shrink-0 aspect-video bg-gray-900 overflow-hidden">
         {isYouTube && video.youtube_id ? (
           <img
             src={getYouTubeThumbnail(video.youtube_id)}
@@ -98,52 +98,37 @@ function VideoThumbnail({
           />
         )}
         
-        {/* Overlay */}
-        <div className={`absolute inset-0 transition-opacity duration-300 ${
-          isSelected ? 'bg-amber-500/10' : 'bg-black/20 group-hover:bg-black/5'
-        }`} />
-        
         {/* Play icon */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-all">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
             isYouTube 
-              ? (isSelected ? 'bg-red-500 scale-100' : 'bg-red-500/80 scale-90 group-hover:scale-100')
-              : (isSelected ? 'bg-amber-500 scale-100' : 'bg-white/40 scale-90 group-hover:scale-100 group-hover:bg-white/60')
+              ? 'bg-red-500'
+              : (isSelected ? 'bg-orange-500' : 'bg-white/70 group-hover:bg-white/90')
           }`}>
-            {isYouTube ? (
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-              </svg>
-            ) : (
-              <svg className="w-5 h-5 ml-0.5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            )}
+            <svg className={`w-4 h-4 ml-0.5 ${isYouTube || isSelected ? 'text-white' : 'text-gray-700'}`} fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
           </div>
         </div>
         
         {/* Type badge */}
         {isYouTube && (
-          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-medium">
+          <div className="absolute bottom-1 left-1 bg-red-500 text-white text-[10px] px-1 py-0.5 rounded font-bold">
             YT
-          </div>
-        )}
-        
-        {/* Selected indicator */}
-        {isSelected && (
-          <div className="absolute top-2 right-2 bg-amber-500 text-white text-xs px-2 py-0.5 rounded font-medium shadow">
-            ▶ Сейчас
           </div>
         )}
       </div>
       
-      {/* Title */}
-      <div className="p-3">
-        <h4 className={`font-medium text-sm ${isSelected ? 'text-amber-700' : 'text-gray-800'}`}>
+      {/* Info */}
+      <div className="flex-1 p-3 flex flex-col justify-center min-w-0">
+        <h4 className={`font-semibold text-sm leading-tight truncate ${isSelected ? 'text-orange-700' : 'text-gray-800'}`}>
           {video.title}
         </h4>
         {video.description && (
           <p className="text-xs text-gray-500 mt-1 line-clamp-1">{video.description}</p>
+        )}
+        {isSelected && (
+          <span className="text-[10px] text-orange-600 font-bold mt-1 uppercase tracking-wide">▶ Воспроизводится</span>
         )}
       </div>
     </div>
@@ -163,49 +148,40 @@ function PhotoThumbnail({
   return (
     <div
       onClick={onClick}
-      className={`group cursor-pointer rounded-xl transition-all duration-300 border-2 ${
+      className={`group cursor-pointer rounded-lg transition-all duration-300 overflow-hidden flex ${
         isSelected 
-          ? 'border-amber-500 shadow-lg bg-amber-50' 
-          : 'border-transparent hover:border-amber-300 hover:shadow-md bg-white'
+          ? 'bg-orange-50 ring-2 ring-orange-500' 
+          : 'bg-white hover:bg-gray-50 border border-gray-200 hover:border-orange-300'
       }`}
     >
-      {/* Photo thumbnail */}
-      <div className="relative aspect-video bg-gray-200 rounded-t-lg overflow-hidden">
+      {/* Thumbnail */}
+      <div className="relative w-32 sm:w-36 flex-shrink-0 aspect-video bg-gray-200 overflow-hidden">
         <Image
           src={photo.url}
           alt={photo.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 768px) 100vw, 33vw"
+          sizes="150px"
         />
         
-        {/* Overlay */}
-        <div className={`absolute inset-0 transition-opacity duration-300 ${
-          isSelected ? 'bg-amber-500/10' : 'bg-black/10 group-hover:bg-black/0'
-        }`} />
-        
-        {/* Selected indicator */}
-        {isSelected && (
-          <div className="absolute top-2 right-2 bg-amber-500 text-white text-xs px-2 py-0.5 rounded font-medium shadow">
-            ✓ Выбрано
-          </div>
-        )}
-        
         {/* Zoom icon */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center">
-            <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-all">
+          <div className="w-8 h-8 rounded-full bg-white/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
             </svg>
           </div>
         </div>
       </div>
       
-      {/* Title */}
-      <div className="p-3">
-        <h4 className={`font-medium text-sm ${isSelected ? 'text-amber-700' : 'text-gray-800'}`}>
+      {/* Info */}
+      <div className="flex-1 p-3 flex flex-col justify-center min-w-0">
+        <h4 className={`font-semibold text-sm leading-tight truncate ${isSelected ? 'text-orange-700' : 'text-gray-800'}`}>
           {photo.title}
         </h4>
+        {isSelected && (
+          <span className="text-[10px] text-orange-600 font-bold mt-1 uppercase tracking-wide">✓ Выбрано</span>
+        )}
       </div>
     </div>
   );
@@ -340,226 +316,288 @@ export default function WorksPage() {
   const itemCount = currentItems.length;
 
   return (
-    <div className="bg-gradient-to-b from-[#F5F7FA] to-[#EFF6FF] min-h-screen">
-      {/* Header Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#ECF0F1] to-[#F8F9FA]/50 opacity-70"></div>
-        <div className="absolute right-0 top-0 w-96 h-96 bg-amber-50/70 rounded-full opacity-40 blur-3xl -translate-x-1/3 -translate-y-1/2"></div>
+    <div className="bg-gradient-to-b from-slate-100 to-gray-100 min-h-screen">
+      {/* Industrial-themed header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        {/* Industrial grid pattern */}
+        <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
         
-        <div className="max-w-7xl mx-auto py-16 px-4 sm:py-20 sm:px-6 lg:px-8 relative">
+        {/* Diagonal stripes accent */}
+        <div className="absolute top-0 right-0 w-96 h-96 opacity-10">
+          <div className="absolute inset-0" style={{backgroundImage: 'repeating-linear-gradient(45deg, #f59e0b, #f59e0b 2px, transparent 2px, transparent 20px)'}}></div>
+        </div>
+        
+        {/* Orange accent glow */}
+        <div className="absolute -left-20 top-1/2 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute -right-20 bottom-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl"></div>
+
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 relative">
           <div className="text-center relative">
-            <div className="inline-block mx-auto mb-4">
-              <div className="w-16 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto mb-1 rounded-full"></div>
-              <div className="w-10 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto rounded-full"></div>
+            {/* Industrial icon */}
+            <div className="inline-flex items-center justify-center mb-5">
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 sm:text-4xl tracking-tight">
-              <span className="inline-block border-b-2 border-amber-400 pb-2">Наши работы</span>
+            
+            <h1 className="text-2xl font-black text-white sm:text-4xl tracking-tight uppercase">
+              Наши <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">работы</span>
             </h1>
-            <p className="mt-5 max-w-2xl mx-auto text-base text-gray-600 leading-relaxed">
-              Галерея выполненных проектов. Выберите фото или видео для просмотра.
+            
+            {/* Industrial underline */}
+            <div className="flex items-center justify-center mt-3 space-x-2">
+              <div className="w-10 h-0.5 bg-gray-600 rounded"></div>
+              <div className="w-20 h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded"></div>
+              <div className="w-10 h-0.5 bg-gray-600 rounded"></div>
+            </div>
+            
+            <p className="mt-4 max-w-xl mx-auto text-sm sm:text-base text-gray-400 leading-relaxed">
+              Галерея <span className="text-orange-400 font-semibold">выполненных проектов</span>
             </p>
+            
+            {/* Stats */}
+            <div className="mt-6 flex flex-wrap justify-center gap-4">
+              <div className="flex items-center bg-gray-800/60 px-3 py-1.5 rounded-lg border border-gray-700/50">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-orange-400 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-white text-sm font-semibold">{photos.length} фото</span>
+              </div>
+              <div className="flex items-center bg-gray-800/60 px-3 py-1.5 rounded-lg border border-gray-700/50">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-orange-400 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                </svg>
+                <span className="text-white text-sm font-semibold">{videos.length} видео</span>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Bottom edge */}
+        <div className="absolute left-0 right-0 bottom-0 h-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500"></div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 pb-20 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent"></div>
-              <p className="mt-4 text-gray-600">Загрузка...</p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent"></div>
+              <p className="mt-4 text-gray-600 font-medium">Загрузка...</p>
             </div>
           </div>
         ) : error ? (
           <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 mb-6">
-              <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
+              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <p className="text-xl text-gray-600">{error}</p>
+            <p className="text-lg text-gray-600">{error}</p>
           </div>
         ) : (
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Main Media Player - Left Side */}
-            <div className="lg:w-2/3">
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                {/* Media Container */}
-                <div className="relative aspect-video bg-gray-900">
-                  {viewMode === 'video' ? (
-                    // Video player
-                    selectedVideo && (
-                      <>
-                        {selectedVideo.video_type === 'youtube' ? (
-                          <iframe
-                            src={`${selectedVideo.url}?autoplay=0&rel=0`}
-                            className="w-full h-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        ) : (
+          <div className="space-y-6">
+            {/* Toggle Buttons - Above main content on mobile */}
+            <div className="flex items-center justify-between bg-white rounded-xl shadow-md p-3 border border-gray-200">
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setViewMode('photo')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
+                    viewMode === 'photo'
+                      ? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-md'
+                      : 'text-gray-600 hover:text-orange-600 hover:bg-white'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Фото
+                </button>
+                <button
+                  onClick={() => setViewMode('video')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
+                    viewMode === 'video'
+                      ? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-md'
+                      : 'text-gray-600 hover:text-orange-600 hover:bg-white'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Видео
+                </button>
+              </div>
+              <span className="text-sm text-gray-500 font-medium px-3 py-1 bg-gray-100 rounded-full">
+                {itemCount} {viewMode === 'video' ? 'видео' : 'фото'}
+              </span>
+            </div>
+
+            {/* Main content grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Main Media Player - Takes 2 columns on desktop */}
+              <div className="lg:col-span-2">
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                  {/* Top accent bar */}
+                  <div className="h-1 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500"></div>
+                  
+                  {/* Media Container - 16:9 aspect ratio */}
+                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                    <div className="absolute inset-0 bg-gray-900">
+                      {viewMode === 'video' ? (
+                        // Video player
+                        selectedVideo && (
                           <>
-                            <video
-                              ref={mainVideoRef}
-                              src={selectedVideo.url}
-                              className="w-full h-full object-contain"
-                              controls
-                              onPlay={() => setIsPlaying(true)}
-                              onPause={() => setIsPlaying(false)}
-                              onEnded={() => setIsPlaying(false)}
-                            />
-                            
-                            {/* Custom overlay when not playing */}
-                            {!isPlaying && (
-                              <div 
-                                className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 flex items-center justify-center cursor-pointer group"
-                                onClick={togglePlay}
-                              >
-                                <div className="w-20 h-20 rounded-full bg-amber-500/90 flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:bg-amber-500 shadow-lg shadow-amber-500/30">
-                                  <svg className="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M8 5v14l11-7z"/>
-                                  </svg>
-                                </div>
-                              </div>
+                            {selectedVideo.video_type === 'youtube' ? (
+                              <iframe
+                                src={`${selectedVideo.url}?autoplay=0&rel=0`}
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              />
+                            ) : (
+                              <>
+                                <video
+                                  ref={mainVideoRef}
+                                  src={selectedVideo.url}
+                                  className="w-full h-full object-contain"
+                                  controls
+                                  onPlay={() => setIsPlaying(true)}
+                                  onPause={() => setIsPlaying(false)}
+                                  onEnded={() => setIsPlaying(false)}
+                                />
+                                
+                                {/* Custom overlay when not playing */}
+                                {!isPlaying && (
+                                  <div 
+                                    className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 flex items-center justify-center cursor-pointer group"
+                                    onClick={togglePlay}
+                                  >
+                                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-orange-500/90 flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-500 shadow-xl shadow-orange-500/40">
+                                      <svg className="w-8 h-8 sm:w-10 sm:h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                )}
+                              </>
                             )}
                           </>
-                        )}
-                      </>
-                    )
-                  ) : (
-                    // Photo viewer
-                    selectedPhoto && (
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={selectedPhoto.url}
-                          alt={selectedPhoto.title}
-                          fill
-                          className="object-contain"
-                          sizes="(max-width: 1024px) 100vw, 66vw"
-                          priority
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
-                
-                {/* Media Info */}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h2 className="text-2xl font-bold text-gray-800">
-                      {viewMode === 'video' 
-                        ? (selectedVideo?.title || 'Выберите видео')
-                        : (selectedPhoto?.title || 'Выберите фото')
-                      }
-                    </h2>
-                    {viewMode === 'video' && selectedVideo?.video_type === 'youtube' && (
-                      <span className="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full font-medium">
-                        YouTube
-                      </span>
-                    )}
+                        )
+                      ) : (
+                        // Photo viewer
+                        selectedPhoto && (
+                          <div className="relative w-full h-full">
+                            <Image
+                              src={selectedPhoto.url}
+                              alt={selectedPhoto.title}
+                              fill
+                              className="object-contain"
+                              sizes="(max-width: 1024px) 100vw, 66vw"
+                              priority
+                            />
+                          </div>
+                        )
+                      )}
+                    </div>
                   </div>
-                  <p className="text-gray-600">
-                    {viewMode === 'video' 
-                      ? (selectedVideo?.description || 'Выберите видео из списка справа для просмотра')
-                      : 'Выберите фото из списка справа для просмотра'
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Media List - Right Side */}
-            <div className="lg:w-1/3 flex flex-col">
-              <div className="bg-white rounded-2xl shadow-lg p-4 flex-1 flex flex-col">
-                {/* Toggle Buttons */}
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
-                  <div className="flex bg-gray-100 rounded-lg p-1 flex-1">
-                    <button
-                      onClick={() => setViewMode('photo')}
-                      className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                        viewMode === 'photo'
-                          ? 'bg-amber-500 text-white shadow-md'
-                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
-                      }`}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      Фото
-                    </button>
-                    <button
-                      onClick={() => setViewMode('video')}
-                      className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                        viewMode === 'video'
-                          ? 'bg-amber-500 text-white shadow-md'
-                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
-                      }`}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                      Видео
-                    </button>
+                  
+                  {/* Media Info */}
+                  <div className="p-4 sm:p-5 border-t border-gray-100">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h2 className="text-lg sm:text-xl font-bold text-gray-800 truncate">
+                            {viewMode === 'video' 
+                              ? (selectedVideo?.title || 'Выберите видео')
+                              : (selectedPhoto?.title || 'Выберите фото')
+                            }
+                          </h2>
+                          {viewMode === 'video' && selectedVideo?.video_type === 'youtube' && (
+                            <span className="flex-shrink-0 px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full font-bold">
+                              YouTube
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {viewMode === 'video' 
+                            ? (selectedVideo?.description || 'Выберите видео из списка для просмотра')
+                            : 'Выберите фото из списка для просмотра'
+                          }
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
-                    {itemCount} {viewMode === 'video' ? 'видео' : 'фото'}
-                  </span>
-                </div>
-                
-                {/* Scrollable media list */}
-                <div className="space-y-3 flex-1 overflow-y-auto pr-2 custom-scrollbar" style={{ maxHeight: 'calc(56.25vw * 0.66 - 40px)', minHeight: '400px' }}>
-                  {viewMode === 'video' ? (
-                    videos.length > 0 ? (
-                      videos.map((video) => (
-                        <VideoThumbnail
-                          key={video.id}
-                          video={video}
-                          isSelected={selectedVideo?.id === video.id}
-                          onClick={() => handleVideoSelect(video)}
-                        />
-                      ))
-                    ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        <p>Видео пока нет</p>
-                      </div>
-                    )
-                  ) : (
-                    photos.length > 0 ? (
-                      photos.map((photo) => (
-                        <PhotoThumbnail
-                          key={photo.id}
-                          photo={photo}
-                          isSelected={selectedPhoto?.id === photo.id}
-                          onClick={() => handlePhotoSelect(photo)}
-                        />
-                      ))
-                    ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <p>Фото пока нет</p>
-                      </div>
-                    )
-                  )}
                 </div>
               </div>
               
-              {/* CTA */}
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <Link
-                  href="/contacts"
-                  className="flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  <span>Связаться с нами</span>
-                  <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
+              {/* Media List - Right sidebar */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full flex flex-col">
+                  {/* Header */}
+                  <div className="p-4 border-b border-gray-100 bg-gray-50">
+                    <h3 className="font-bold text-gray-800 flex items-center">
+                      <div className="w-1 h-5 bg-orange-500 rounded mr-2"></div>
+                      {viewMode === 'video' ? 'Видео' : 'Фотографии'}
+                      <span className="ml-2 text-xs text-gray-500 font-normal">({itemCount})</span>
+                    </h3>
+                  </div>
+                  
+                  {/* Scrollable media list */}
+                  <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar" style={{ maxHeight: '500px' }}>
+                    {viewMode === 'video' ? (
+                      videos.length > 0 ? (
+                        videos.map((video) => (
+                          <VideoThumbnail
+                            key={video.id}
+                            video={video}
+                            isSelected={selectedVideo?.id === video.id}
+                            onClick={() => handleVideoSelect(video)}
+                          />
+                        ))
+                      ) : (
+                        <div className="text-center py-10 text-gray-500">
+                          <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                          <p className="text-sm">Видео пока нет</p>
+                        </div>
+                      )
+                    ) : (
+                      photos.length > 0 ? (
+                        photos.map((photo) => (
+                          <PhotoThumbnail
+                            key={photo.id}
+                            photo={photo}
+                            isSelected={selectedPhoto?.id === photo.id}
+                            onClick={() => handlePhotoSelect(photo)}
+                          />
+                        ))
+                      ) : (
+                        <div className="text-center py-10 text-gray-500">
+                          <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <p className="text-sm">Фото пока нет</p>
+                        </div>
+                      )
+                    )}
+                  </div>
+                  
+                  {/* CTA */}
+                  <div className="p-4 border-t border-gray-100 bg-gray-50">
+                    <Link
+                      href="/contacts"
+                      className="flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                      </svg>
+                      Связаться с нами
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -569,7 +607,7 @@ export default function WorksPage() {
       {/* Custom scrollbar styles */}
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
+          width: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: #f1f1f1;
@@ -580,7 +618,7 @@ export default function WorksPage() {
           border-radius: 3px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #9ca3af;
+          background: #f59e0b;
         }
       `}</style>
     </div>

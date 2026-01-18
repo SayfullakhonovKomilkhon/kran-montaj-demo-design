@@ -3,12 +3,63 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaCheck, FaUsers, FaClock, FaTools, FaAward, FaMedal, FaCertificate } from 'react-icons/fa';
+import { FaCheck, FaUsers, FaClock, FaTools, FaAward, FaMedal, FaCertificate, FaShield } from 'react-icons/fa';
+import { supabase } from '../lib/supabase';
+
+interface AboutContent {
+  id: string;
+  block_key: string;
+  title: string | null;
+  content: string | null;
+  image_url: string | null;
+  icon: string | null;
+  order: number;
+  is_active: boolean;
+  metadata: Record<string, unknown>;
+}
+
+// Icon mapping
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  FaCertificate,
+  FaAward,
+  FaTools,
+  FaUsers,
+  FaClock,
+  FaShield,
+  FaCheck,
+  FaMedal,
+};
+
+// Block key mapping - maps various possible keys to section types
+const INTRO_KEYS = ['history', 'company_intro', 'about', 'intro', 'company', 'Кто мы', 'кто мы'];
+const MISSION_KEYS = ['mission', 'Миссия', 'миссия', 'mission_statement'];
+const STATS_KEYS = ['stats', 'statistics', 'статистика', 'numbers'];
+const ADVANTAGE_KEYS = ['advantage', 'quality', 'safety', 'support', 'преимущество', 'Качество', 'качество', 'Безопасность', 'безопасность', 'individual', 'Индивидуальный подход'];
+
+function isIntroBlock(key: string): boolean {
+  return INTRO_KEYS.some(k => key.toLowerCase().includes(k.toLowerCase()));
+}
+
+function isMissionBlock(key: string): boolean {
+  return MISSION_KEYS.some(k => key.toLowerCase().includes(k.toLowerCase()));
+}
+
+function isStatsBlock(key: string): boolean {
+  return STATS_KEYS.some(k => key.toLowerCase().includes(k.toLowerCase()));
+}
+
+function isAdvantageBlock(key: string): boolean {
+  return ADVANTAGE_KEYS.some(k => key.toLowerCase().includes(k.toLowerCase()));
+}
 
 export default function AboutPage() {
   // Animation on scroll
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  
+  // Content from database
+  const [aboutContent, setAboutContent] = useState<AboutContent[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,6 +81,29 @@ export default function AboutPage() {
     };
   }, []);
 
+  // Fetch content from Supabase
+  useEffect(() => {
+    async function fetchAboutContent() {
+      try {
+        const { data, error } = await supabase
+          .from('about_content')
+          .select('*')
+          .eq('is_active', true)
+          .order('order', { ascending: true });
+
+        if (error) throw error;
+        console.log('Fetched about content:', data);
+        setAboutContent(data || []);
+      } catch (error) {
+        console.error('Error fetching about content:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAboutContent();
+  }, []);
+
   // Image error handling
   const [imgErrors, setImgErrors] = useState<{[key: string]: boolean}>({});
   
@@ -37,293 +111,378 @@ export default function AboutPage() {
     setImgErrors(prev => ({...prev, [id]: true}));
   };
 
-  // Company data
+  // Find blocks by type
+  const introBlock = aboutContent.find(item => isIntroBlock(item.block_key));
+  const missionBlock = aboutContent.find(item => isMissionBlock(item.block_key));
+  const statsBlock = aboutContent.find(item => isStatsBlock(item.block_key));
+  
+  // Get all advantage blocks (blocks that are not intro, mission, or stats)
+  const advantageBlocks = aboutContent.filter(item => 
+    isAdvantageBlock(item.block_key) || 
+    (!isIntroBlock(item.block_key) && !isMissionBlock(item.block_key) && !isStatsBlock(item.block_key))
+  );
+
+  // Get stats from database or use defaults
   const companyData = {
-    founded: 2008,
-    experience: new Date().getFullYear() - 2008,
-    projects: 500,
-    clients: 250,
-    employees: 80
+    experience: (statsBlock?.metadata?.experience as number) || new Date().getFullYear() - 2008,
+    projects: (statsBlock?.metadata?.projects as number) || 500,
+    clients: (statsBlock?.metadata?.clients as number) || 250,
+    employees: (statsBlock?.metadata?.employees as number) || 80
   };
+
+  // Default advantages (used if no advantage blocks in database)
+  const defaultAdvantages = [
+    { id: '1', title: 'Профессионализм', content: 'Опытные специалисты с многолетним стажем работы', icon: 'FaCertificate' },
+    { id: '2', title: 'Комплексный подход', content: 'Полный спектр услуг от проектирования до обслуживания', icon: 'FaAward' },
+    { id: '3', title: 'Техническая поддержка', content: 'Оперативное сервисное обслуживание 24/7', icon: 'FaTools' }
+  ];
+
+  // Use database advantages if available, otherwise use defaults
+  const displayAdvantages = advantageBlocks.length > 0 
+    ? advantageBlocks.map(block => ({
+        id: block.id,
+        title: block.title || 'Преимущество',
+        content: block.content || '',
+        icon: block.icon || 'FaCertificate'
+      }))
+    : defaultAdvantages;
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-b from-slate-100 to-gray-50 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
-    <div className="bg-gradient-to-b from-[#F5F7FA] to-[#EFF6FF] min-h-screen">
-      {/* Header section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#ECF0F1] to-[#F8F9FA]/50 opacity-70"></div>
-        <div className="absolute inset-0 bg-[url('/img/services/catalog-background.png')] bg-cover bg-center opacity-5 mix-blend-overlay"></div>
-        <div className="absolute right-0 top-0 w-96 h-96 bg-amber-50/70 rounded-full opacity-40 blur-3xl -translate-x-1/3 -translate-y-1/2"></div>
-        <div className="absolute left-0 bottom-0 w-96 h-96 bg-amber-50/70 rounded-full opacity-40 blur-3xl translate-x-1/3 translate-y-1/2"></div>
-        <div className="absolute left-1/4 top-1/3 w-32 h-32 bg-amber-100/50 rounded-full opacity-30 blur-xl"></div>
+    <div className="bg-gradient-to-b from-slate-100 to-gray-50 min-h-screen overflow-hidden">
+      {/* Industrial-themed header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        {/* Industrial grid pattern */}
+        <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
         
-        <div className="max-w-7xl mx-auto py-20 px-4 sm:py-28 sm:px-6 lg:px-8 relative">
-          <div className="absolute w-24 h-24 bg-amber-100/80 rounded-full blur-2xl -left-10 top-20 opacity-60"></div>
-          <div className="absolute w-40 h-40 bg-amber-100/80 rounded-full blur-2xl right-10 top-40 opacity-60"></div>
-          
+        {/* Diagonal stripes accent */}
+        <div className="absolute top-0 right-0 w-96 h-96 opacity-10">
+          <div className="absolute inset-0" style={{backgroundImage: 'repeating-linear-gradient(45deg, #f59e0b, #f59e0b 2px, transparent 2px, transparent 20px)'}}></div>
+        </div>
+        
+        {/* Orange accent glow */}
+        <div className="absolute -left-20 top-1/2 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute -right-20 bottom-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl"></div>
+
+        <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 relative">
           <div className="text-center relative">
-            <div className="inline-block mx-auto mb-4">
-              <div className="w-16 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto mb-1 rounded-full"></div>
-              <div className="w-10 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto rounded-full"></div>
+            {/* Industrial icon */}
+            <div className="inline-flex items-center justify-center mb-6" data-aos="fade-up" data-aos-duration="800">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30">
+                <FaUsers className="h-8 w-8 text-white" />
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 sm:text-5xl tracking-tight">
-              <span className="inline-block border-b-2 border-amber-400 pb-2">О компании</span>
+            
+            <h1
+              className="text-3xl font-black text-white sm:text-5xl tracking-tight uppercase"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              О <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">компании</span>
             </h1>
-            <p className="mt-7 max-w-2xl mx-auto text-base text-gray-600 leading-relaxed">
-              КРАН-МОНТАЖ — ведущая компания в сфере изготовления и обслуживания грузоподъемного оборудования с {companyData.experience}-летним опытом работы
+            
+            {/* Industrial underline */}
+            <div className="flex items-center justify-center mt-4 space-x-2" data-aos="fade-up" data-aos-delay="150">
+              <div className="w-12 h-1 bg-gray-600 rounded"></div>
+              <div className="w-24 h-1.5 bg-gradient-to-r from-orange-500 to-yellow-500 rounded"></div>
+              <div className="w-12 h-1 bg-gray-600 rounded"></div>
+            </div>
+            
+            <p
+              className="mt-6 max-w-2xl mx-auto text-base text-gray-300 leading-relaxed"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              КРАН-МОНТАЖ — ведущая компания в сфере <span className="text-orange-400 font-semibold">изготовления и обслуживания</span> грузоподъемного оборудования с {companyData.experience}-летним опытом работы
             </p>
           </div>
         </div>
-        
-        {/* Decorative elements */}
-        <div className="absolute left-0 bottom-0 w-full h-8 bg-gradient-to-b from-transparent to-[#EFF6FF]/80"></div>
-        <div className="absolute left-0 right-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-200/30 to-transparent"></div>
+
+        {/* Bottom edge */}
+        <div className="absolute left-0 right-0 bottom-0 h-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500"></div>
       </div>
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-4 pb-28 sm:px-6 lg:px-8 pt-4 relative" ref={sectionRef}>
-        <div className="absolute -left-64 top-1/3 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl"></div>
-        <div className="absolute -right-64 bottom-1/3 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl"></div>
+      <div className="max-w-7xl mx-auto px-4 pb-28 sm:px-6 lg:px-8 pt-12 relative" ref={sectionRef}>
         
-        <div className="space-y-20 relative z-10">
-          {/* About us section */}
-          <div className={`lg:grid lg:grid-cols-12 lg:gap-10 items-center ${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'} transition-all duration-1000 ease-out`}>
-            <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gradient-to-r from-amber-50 to-amber-100 text-amber-800 border-l-4 border-l-amber-500">
-                О нас
+        <div className="space-y-16 relative z-10">
+          {/* Stats/counter section */}
+          <div 
+            className="bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 rounded-2xl shadow-2xl overflow-hidden relative"
+            data-aos="fade-up"
+            data-aos-duration="800"
+          >
+            {/* Grid pattern */}
+            <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '30px 30px'}}></div>
+            
+            <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 p-8 md:p-12">
+              <div className="text-center p-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/30">
+                  <FaClock className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-4xl font-black text-orange-400">{companyData.experience}</p>
+                <p className="text-sm text-gray-400 font-medium uppercase tracking-wider mt-1">Лет опыта</p>
               </div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800">
-                Кто мы
-                <div className="w-16 h-0.5 bg-gradient-to-r from-amber-500 to-amber-400 mt-2"></div>
-              </h2>
-              <p className="text-gray-600 text-base leading-relaxed">
-                Компания КРАН-МОНТАЖ основана в 2008 году и специализируется на производстве, монтаже и сервисном обслуживании кранового оборудования. За {companyData.experience} лет работы мы накопили богатый опыт и экспертизу в сфере грузоподъемного оборудования.
-              </p>
-              <p className="text-gray-600 text-base leading-relaxed">
-                Наша команда состоит из высококвалифицированных специалистов, инженеров и технических экспертов, которые обеспечивают высокое качество всех выполняемых работ. Мы гордимся тем, что предоставляем полный спектр услуг: от проектирования и изготовления до установки и постгарантийного обслуживания грузоподъемного оборудования.
-              </p>
-              <p className="text-gray-600 text-base leading-relaxed">
-                Компания КРАН-МОНТАЖ сегодня — это надежный партнер для предприятий различных отраслей промышленности, строительства и логистики.
-              </p>
+              
+              <div className="text-center p-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/30">
+                  <FaTools className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-4xl font-black text-yellow-400">{companyData.projects}+</p>
+                <p className="text-sm text-gray-400 font-medium uppercase tracking-wider mt-1">Проектов</p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/30">
+                  <FaUsers className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-4xl font-black text-orange-400">{companyData.clients}+</p>
+                <p className="text-sm text-gray-400 font-medium uppercase tracking-wider mt-1">Клиентов</p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/30">
+                  <FaAward className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-4xl font-black text-yellow-400">{companyData.employees}</p>
+                <p className="text-sm text-gray-400 font-medium uppercase tracking-wider mt-1">Специалистов</p>
+              </div>
             </div>
-            <div className="mt-10 lg:mt-0 lg:col-span-6">
-              <div className="relative overflow-hidden rounded-lg shadow-lg transition-all duration-300 group hover:shadow-xl transform hover:-translate-y-1">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-300/30 via-transparent to-amber-400/30 rounded-lg z-0 transform transition-all duration-700 group-hover:rotate-1 group-hover:scale-[1.03]"></div>
+          </div>
+
+          {/* About us section - from database or default */}
+          <div 
+            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200"
+            data-aos="fade-up"
+            data-aos-duration="800"
+          >
+            {/* Top accent bar */}
+            <div className="h-1.5 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500"></div>
+            
+            <div className="lg:grid lg:grid-cols-12 lg:gap-0">
+              {/* Image section */}
+              <div className="lg:col-span-5 relative h-72 lg:h-auto min-h-[350px] bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100 overflow-hidden">
+                {/* Grid pattern */}
+                <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(#1f2937 1px, transparent 1px), linear-gradient(90deg, #1f2937 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
                 
-                <div className="relative flex flex-col h-full z-10 bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] rounded-lg m-[1px] border border-amber-100 transform transition-all duration-500 ease-out group-hover:scale-[1.02]">
-                  {imgErrors['about1'] ? (
-                    <div className="w-full h-80 flex items-center justify-center bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] p-6">
-                      <FaUsers className="w-24 h-24 text-slate-600" />
-                    </div>
+                {/* Badge */}
+                <div className="absolute top-4 left-4 z-10">
+                  <div className="bg-gray-800 text-yellow-400 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center shadow-lg">
+                    <FaUsers className="h-4 w-4 mr-1.5" />
+                    О нас
+                  </div>
+                </div>
+                
+                {imgErrors['about1'] ? (
+                  <div className="w-full h-full flex items-center justify-center p-6">
+                    <FaUsers className="w-24 h-24 text-gray-300" />
+                  </div>
+                ) : (
+                  <div className="relative w-full h-full">
+                    <Image 
+                      src={introBlock?.image_url || "/img/services/0000259150_xzgmnpcd.jpg"}
+                      alt="О компании КРАН-МОНТАЖ"
+                      fill
+                      className="object-cover"
+                      onError={() => handleImageError('about1')}
+                    />
+                  </div>
+                )}
+              </div>
+              
+              {/* Content section */}
+              <div className="lg:col-span-7 p-6 lg:p-10 flex flex-col justify-center">
+                <div className="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-sm mb-4 w-fit">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  Кто мы
+                </div>
+                
+                <h2 className="text-2xl lg:text-3xl font-black text-gray-800">
+                  {introBlock?.title || 'История компании'}
+                </h2>
+                <div className="w-20 h-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-400 mt-3 rounded-full"></div>
+                
+                <div className="mt-6 space-y-4 text-gray-600 leading-relaxed">
+                  {introBlock?.content ? (
+                    introBlock.content.split('\n').map((paragraph, idx) => (
+                      <p key={idx}>{paragraph}</p>
+                    ))
                   ) : (
-                    <div className="relative w-full h-80">
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#E2E8F0]/50 to-transparent opacity-30"></div>
-                      <Image 
-                        src="/img/services/0000259150_xzgmnpcd.jpg" 
-                        alt="О компании КРАН-МОНТАЖ"
-                        fill
-                        className="object-cover rounded-lg p-0 transform duration-700 ease-out group-hover:scale-105"
-                        onError={() => handleImageError('about1')}
-                      />
-                      <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-amber-400/30 to-transparent"></div>
-                    </div>
+                    <>
+                      <p>
+                        Компания <span className="font-bold text-orange-600">КРАН-МОНТАЖ</span> основана в 2008 году и специализируется на производстве, монтаже и сервисном обслуживании кранового оборудования.
+                      </p>
+                      <p>
+                        За {companyData.experience} лет работы мы накопили богатый опыт и экспертизу в сфере грузоподъемного оборудования. Наша команда состоит из высококвалифицированных специалистов.
+                      </p>
+                      <p>
+                        Сегодня КРАН-МОНТАЖ — это надежный партнер для предприятий различных отраслей промышленности, строительства и логистики.
+                      </p>
+                    </>
                   )}
                 </div>
               </div>
             </div>
+            
+            {/* Bottom bar */}
+            <div className="h-1 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700"></div>
           </div>
 
-          {/* Stats/counter section */}
-          <div className={`${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'} transition-all duration-1000 ease-out delay-300`}>
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 via-transparent to-amber-200/10"></div>
-              <div className="absolute right-0 top-0 w-96 h-96 bg-amber-50/30 rounded-full opacity-40 blur-3xl -translate-y-1/2"></div>
-              
-              <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 p-8 md:p-12">
-                <div className="text-center space-y-2">
-                  <FaClock className="w-10 h-10 mx-auto text-amber-500" />
-                  <p className="text-3xl font-bold text-gray-800">{companyData.experience}</p>
-                  <p className="text-sm text-gray-600 font-medium">Лет опыта</p>
-                </div>
-                
-                <div className="text-center space-y-2">
-                  <FaTools className="w-10 h-10 mx-auto text-amber-500" />
-                  <p className="text-3xl font-bold text-gray-800">{companyData.projects}+</p>
-                  <p className="text-sm text-gray-600 font-medium">Завершенных проектов</p>
-                </div>
-                
-                <div className="text-center space-y-2">
-                  <FaUsers className="w-10 h-10 mx-auto text-amber-500" />
-                  <p className="text-3xl font-bold text-gray-800">{companyData.clients}+</p>
-                  <p className="text-sm text-gray-600 font-medium">Довольных клиентов</p>
-                </div>
-                
-                <div className="text-center space-y-2">
-                  <FaAward className="w-10 h-10 mx-auto text-amber-500" />
-                  <p className="text-3xl font-bold text-gray-800">{companyData.employees}</p>
-                  <p className="text-sm text-gray-600 font-medium">Специалистов</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Mission section */}
-          <div className={`${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'} transition-all duration-1000 ease-out delay-500`}>
-            <div className="lg:grid lg:grid-cols-12 lg:gap-10 items-center">
-              <div className="lg:col-span-7 lg:order-2 space-y-6">
-                <div className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gradient-to-r from-amber-50 to-amber-100 text-amber-800 border-l-4 border-l-amber-500">
+          {/* Mission section - from database or default */}
+          <div 
+            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200"
+            data-aos="fade-up"
+            data-aos-duration="800"
+          >
+            <div className="h-1.5 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500"></div>
+            
+            <div className="lg:grid lg:grid-cols-12 lg:gap-0">
+              {/* Content section */}
+              <div className="lg:col-span-7 p-6 lg:p-10 flex flex-col justify-center order-2 lg:order-1">
+                <div className="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-sm mb-4 w-fit">
+                  <FaMedal className="h-3.5 w-3.5 mr-1.5" />
                   Миссия
                 </div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800">
-                  Наши ценности и приоритеты
-                  <div className="w-16 h-0.5 bg-gradient-to-r from-amber-500 to-amber-400 mt-2"></div>
-                </h2>
-                <p className="text-gray-600 text-base leading-relaxed">
-                  Наша миссия — обеспечивать клиентов надежным и эффективным грузоподъемным оборудованием, которое повышает безопасность и производительность их работы. Мы стремимся к постоянному совершенствованию и внедрению инновационных технологий.
-                </p>
                 
-                <div className="space-y-4 pt-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 rounded-full bg-amber-100 p-1.5">
-                      <FaCheck className="w-4 h-4 text-amber-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-800">Качество</h3>
-                      <p className="text-gray-600">Мы используем только высококачественные материалы и комплектующие, обеспечивая долговечность и надежность оборудования.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 rounded-full bg-amber-100 p-1.5">
-                      <FaCheck className="w-4 h-4 text-amber-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-800">Безопасность</h3>
-                      <p className="text-gray-600">Безопасность оборудования — наш главный приоритет. Все наши изделия соответствуют самым строгим стандартам безопасности.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 rounded-full bg-amber-100 p-1.5">
-                      <FaCheck className="w-4 h-4 text-amber-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-800">Индивидуальный подход</h3>
-                      <p className="text-gray-600">Мы учитываем все требования и особенности производства наших заказчиков, предлагая оптимальные решения.</p>
-                    </div>
-                  </div>
+                <h2 className="text-2xl lg:text-3xl font-black text-gray-800">
+                  {missionBlock?.title || 'Наши ценности и приоритеты'}
+                </h2>
+                <div className="w-20 h-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-400 mt-3 rounded-full"></div>
+                
+                <div className="mt-6 text-gray-600 leading-relaxed">
+                  {missionBlock?.content ? (
+                    missionBlock.content.split('\n').map((paragraph, idx) => (
+                      <p key={idx} className="mb-4">{paragraph}</p>
+                    ))
+                  ) : (
+                    <p>Наша миссия — обеспечивать клиентов надежным и эффективным грузоподъемным оборудованием, которое повышает безопасность и производительность их работы.</p>
+                  )}
                 </div>
               </div>
               
-              <div className="mt-10 lg:mt-0 lg:col-span-5 lg:order-1">
-                <div className="relative overflow-hidden rounded-lg shadow-lg transition-all duration-300 group hover:shadow-xl transform hover:-translate-y-1">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-300/30 via-transparent to-amber-400/30 rounded-lg z-0 transform transition-all duration-700 group-hover:rotate-1 group-hover:scale-[1.03]"></div>
-                  
-                  <div className="relative flex flex-col h-full z-10 bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] rounded-lg m-[1px] border border-amber-100 transform transition-all duration-500 ease-out group-hover:scale-[1.02]">
-                    {imgErrors['about2'] ? (
-                      <div className="w-full h-96 flex items-center justify-center bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] p-6">
-                        <FaMedal className="w-24 h-24 text-slate-600" />
-                      </div>
-                    ) : (
-                      <div className="relative w-full h-96">
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#E2E8F0]/50 to-transparent opacity-30"></div>
-                        <Image 
-                          src="/img/services/IMG_9370.jpg" 
-                          alt="Ценности и приоритеты КРАН-МОНТАЖ"
-                          fill
-                          className="object-cover rounded-lg p-0 transform duration-700 ease-out group-hover:scale-105"
-                          onError={() => handleImageError('about2')}
-                        />
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-amber-400/30 to-transparent"></div>
-                      </div>
-                    )}
+              {/* Image section */}
+              <div className="lg:col-span-5 relative h-72 lg:h-auto min-h-[350px] bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100 overflow-hidden order-1 lg:order-2">
+                <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(#1f2937 1px, transparent 1px), linear-gradient(90deg, #1f2937 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
+                
+                {imgErrors['about2'] ? (
+                  <div className="w-full h-full flex items-center justify-center p-6">
+                    <FaMedal className="w-24 h-24 text-gray-300" />
                   </div>
-                </div>
+                ) : (
+                  <div className="relative w-full h-full">
+                    <Image 
+                      src={missionBlock?.image_url || "/img/services/IMG_9370.jpg"}
+                      alt="Ценности и приоритеты КРАН-МОНТАЖ"
+                      fill
+                      className="object-cover"
+                      onError={() => handleImageError('about2')}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-
-          {/* Advantages section */}
-          <div className={`${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'} transition-all duration-1000 ease-out delay-700`}>
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gradient-to-r from-amber-50 to-amber-100 text-amber-800 border-l-4 border-l-amber-500 mb-4">
-                Преимущества
-              </div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-gray-800">
-                Почему выбирают нас
-              </h2>
-              <div className="w-16 h-0.5 bg-gradient-to-r from-amber-500 to-amber-400 mt-2 mx-auto"></div>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <div className="p-6">
-                  <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-                    <FaCertificate className="w-8 h-8 text-amber-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-center text-gray-800 mb-3">Профессионализм</h3>
-                  <p className="text-gray-600 text-center">
-                    Наша команда состоит из опытных специалистов с многолетним стажем работы в области грузоподъемного оборудования.
-                  </p>
-                </div>
+            <div className="h-1 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700"></div>
+          </div>
+
+          {/* Advantages section - dynamically from database */}
+          <div data-aos="fade-up" data-aos-duration="800">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-sm mb-4">
+                <FaAward className="h-3.5 w-3.5 mr-1.5" />
+                Преимущества
               </div>
-              
-              <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <div className="p-6">
-                  <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-                    <FaAward className="w-8 h-8 text-amber-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-center text-gray-800 mb-3">Комплексный подход</h3>
-                  <p className="text-gray-600 text-center">
-                    Мы предоставляем полный спектр услуг от проектирования и производства до монтажа и сервисного обслуживания.
-                  </p>
-                </div>
+              <h2 className="text-2xl lg:text-3xl font-black text-gray-800 uppercase">
+                Почему выбирают нас
+              </h2>
+              <div className="flex items-center justify-center mt-4 space-x-2">
+                <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+                <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded"></div>
+                <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
               </div>
-              
-              <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <div className="p-6">
-                  <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-                    <FaTools className="w-8 h-8 text-amber-600" />
+            </div>
+            
+            <div className={`grid gap-6 ${displayAdvantages.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : displayAdvantages.length === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : displayAdvantages.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3'}`}>
+              {displayAdvantages.map((item, index) => {
+                const IconComponent = iconMap[item.icon || 'FaCertificate'] || FaCertificate;
+                return (
+                  <div 
+                    key={item.id || index}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group h-full flex flex-col"
+                  >
+                    <div className="h-1.5 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500 flex-shrink-0"></div>
+                    <div className="p-6 flex flex-col flex-1">
+                      {/* Icon - fixed height */}
+                      <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                        <IconComponent className="w-8 h-8 text-white" />
+                      </div>
+                      {/* Title - fixed height area */}
+                      <div className="h-14 flex items-center justify-center flex-shrink-0">
+                        <h3 className="text-xl font-bold text-center text-gray-800 leading-tight">{item.title}</h3>
+                      </div>
+                      {/* Content - flexible area, aligned to top */}
+                      <div className="flex-1 flex items-start justify-center pt-2">
+                        <p className="text-gray-600 text-center text-sm">{item.content}</p>
+                      </div>
+                    </div>
+                    <div className="h-1 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 flex-shrink-0 mt-auto"></div>
                   </div>
-                  <h3 className="text-xl font-bold text-center text-gray-800 mb-3">Техническая поддержка</h3>
-                  <p className="text-gray-600 text-center">
-                    Мы обеспечиваем оперативное сервисное обслуживание и техническую поддержку на протяжении всего срока эксплуатации оборудования.
-                  </p>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
 
           {/* CTA section */}
-          <div className={`${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'} transition-all duration-1000 ease-out delay-900`}>
-            <div className="bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl shadow-xl overflow-hidden relative">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-white/40 blur-3xl"></div>
-                <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full bg-white/40 blur-3xl"></div>
+          <div 
+            className="bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 rounded-2xl shadow-2xl overflow-hidden relative"
+            data-aos="fade-up"
+            data-aos-duration="800"
+          >
+            <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '30px 30px'}}></div>
+            
+            <div className="absolute -left-10 top-1/2 w-32 h-32 bg-orange-500/30 rounded-full blur-3xl"></div>
+            <div className="absolute -right-10 top-1/2 w-32 h-32 bg-yellow-500/20 rounded-full blur-3xl"></div>
+            
+            <div className="relative z-10 p-8 md:p-12 text-center">
+              <div className="inline-flex items-center justify-center mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                  </svg>
+                </div>
               </div>
-              
-              <div className="relative z-10 p-8 md:p-12 text-center">
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                  Нужна консультация?
-                </h2>
-                <p className="text-white/90 max-w-2xl mx-auto mb-8">
-                  Свяжитесь с нами, чтобы получить подробную информацию о наших услугах и продукции. Наши специалисты готовы ответить на все ваши вопросы.
-                </p>
-                <Link 
-                  href="/contacts" 
-                  className="inline-flex items-center px-6 py-3 border border-white/80 bg-white text-amber-600 rounded-md font-medium hover:bg-gray-100 transition-all duration-300 shadow-lg"
-                >
-                  <span className="flex items-center justify-center">
-                    Связаться с нами
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </span>
-                </Link>
-              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                Нужна консультация?
+              </h2>
+              <p className="text-gray-400 max-w-xl mx-auto mb-6">
+                Свяжитесь с нами, чтобы получить подробную информацию о наших услугах и продукции
+              </p>
+              <Link 
+                href="/contacts" 
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                Связаться с нами
+              </Link>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}

@@ -25,10 +25,10 @@ interface Category {
 // Loading fallback component
 function LoadingFallback() {
 	return (
-		<div className='py-12 pt-8 bg-[#F5F7FA] flex justify-center items-center min-h-[50vh]'>
+		<div className='py-12 pt-8 bg-gradient-to-b from-slate-100 to-gray-50 flex justify-center items-center min-h-[50vh]'>
 			<div className='text-center'>
-				<div className='inline-block animate-spin rounded-full h-14 w-14 border-t-2 border-b-2 border-amber-600 mb-5'></div>
-				<p className='text-gray-700 font-medium text-lg'>Загрузка услуг...</p>
+				<div className='inline-block animate-spin rounded-full h-14 w-14 border-t-3 border-b-3 border-orange-500 mb-5'></div>
+				<p className='text-gray-700 font-bold text-lg'>Загрузка услуг...</p>
 			</div>
 		</div>
 	)
@@ -258,269 +258,351 @@ function ServicesContent() {
 	}
 
 	return (
-		<div className='bg-gradient-to-b from-[#F5F7FA] to-[#EFF6FF] min-h-screen'>
-			{/* Enhanced header with improved design elements */}
-			<div className='relative overflow-hidden'>
-				<div className='absolute inset-0 bg-gradient-to-r from-[#ECF0F1] to-[#F8F9FA]/50 opacity-70'></div>
-				<div className="absolute inset-0 bg-[url('/img/services/catalog-background.png')] bg-cover bg-center opacity-5 mix-blend-overlay"></div>
-				<div className='absolute right-0 top-0 w-96 h-96 bg-amber-50/70 rounded-full opacity-40 blur-3xl -translate-x-1/3 -translate-y-1/2'></div>
-				<div className='absolute left-0 bottom-0 w-96 h-96 bg-amber-50/70 rounded-full opacity-40 blur-3xl translate-x-1/3 translate-y-1/2'></div>
-				<div className='absolute left-1/4 top-1/3 w-32 h-32 bg-amber-100/50 rounded-full opacity-30 blur-xl'></div>
+		<div className='bg-gradient-to-b from-slate-100 to-gray-50 min-h-screen overflow-hidden'>
+			{/* Industrial-themed header */}
+			<div className='relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
+				{/* Industrial grid pattern */}
+				<div className='absolute inset-0 opacity-5' style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
+				
+				{/* Diagonal stripes accent */}
+				<div className='absolute top-0 right-0 w-96 h-96 opacity-10'>
+					<div className='absolute inset-0' style={{backgroundImage: 'repeating-linear-gradient(45deg, #f59e0b, #f59e0b 2px, transparent 2px, transparent 20px)'}}></div>
+				</div>
+				
+				{/* Orange accent glow */}
+				<div className='absolute -left-20 top-1/2 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl'></div>
+				<div className='absolute -right-20 bottom-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl'></div>
 
-				<div className='max-w-7xl mx-auto py-20 px-4 sm:py-28 sm:px-6 lg:px-8 relative'>
-					<div className='absolute w-24 h-24 bg-amber-100/80 rounded-full blur-2xl -left-10 top-20 opacity-60'></div>
-					<div className='absolute w-40 h-40 bg-amber-100/80 rounded-full blur-2xl right-10 top-40 opacity-60'></div>
-
+				<div className='max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 relative'>
 					<div className='text-center relative'>
-						<div className='inline-block mx-auto mb-4'>
-							<div className='w-16 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto mb-1 rounded-full'></div>
-							<div className='w-10 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto rounded-full'></div>
+						{/* Industrial icon */}
+						<div className='inline-flex items-center justify-center mb-6' data-aos='fade-up' data-aos-duration='800'>
+							<div className='w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30'>
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-8 w-8 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+									<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' />
+									<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
+								</svg>
+							</div>
 						</div>
-						<h1 className='text-3xl font-bold text-gray-800 sm:text-5xl tracking-tight'>
-							<span className='inline-block border-b-2 border-amber-400 pb-2'>Наши услуги</span>
+						
+						<h1
+							className='text-3xl font-black text-white sm:text-5xl tracking-tight uppercase'
+							data-aos='fade-up'
+							data-aos-delay='100'
+						>
+							Наши <span className='text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400'>услуги</span>
 						</h1>
-						<p className='mt-7 max-w-2xl mx-auto text-base text-gray-600 leading-relaxed'>
-							Полный спектр решений по изготовлению и обслуживанию грузоподъемного оборудования с
-							гарантией качества и надежности
+						
+						{/* Industrial underline */}
+						<div className='flex items-center justify-center mt-4 space-x-2' data-aos='fade-up' data-aos-delay='150'>
+							<div className='w-12 h-1 bg-gray-600 rounded'></div>
+							<div className='w-24 h-1.5 bg-gradient-to-r from-orange-500 to-yellow-500 rounded'></div>
+							<div className='w-12 h-1 bg-gray-600 rounded'></div>
+						</div>
+						
+						<p
+							className='mt-6 max-w-2xl mx-auto text-base text-gray-300 leading-relaxed'
+							data-aos='fade-up'
+							data-aos-delay='200'
+						>
+							Полный спектр решений по <span className='text-orange-400 font-semibold'>изготовлению, монтажу и обслуживанию</span> грузоподъемного оборудования
 						</p>
+						
+						{/* Stats row */}
+						<div className='mt-10 flex flex-wrap justify-center gap-8' data-aos='fade-up' data-aos-delay='300'>
+							<div className='text-center'>
+								<div className='text-3xl font-black text-orange-400'>24/7</div>
+								<div className='text-xs text-gray-400 uppercase tracking-wider'>Поддержка</div>
+							</div>
+							<div className='text-center'>
+								<div className='text-3xl font-black text-yellow-400'>500+</div>
+								<div className='text-xs text-gray-400 uppercase tracking-wider'>Проектов</div>
+							</div>
+							<div className='text-center'>
+								<div className='text-3xl font-black text-orange-400'>100%</div>
+								<div className='text-xs text-gray-400 uppercase tracking-wider'>Качество</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				{/* Decorative elements */}
-				<div className='absolute left-0 bottom-0 w-full h-8 bg-gradient-to-b from-transparent to-[#EFF6FF]/80'></div>
-				<div className='absolute left-0 right-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-200/30 to-transparent'></div>
+				{/* Bottom edge */}
+				<div className='absolute left-0 right-0 bottom-0 h-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500'></div>
 			</div>
 
-			{/* Categories filter - using buttons with onClick instead of Links */}
+			{/* Industrial-style category filter */}
 			{categories.length > 0 && !loading && !error && (
-				<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-					<div className='flex flex-wrap justify-center gap-4'>
-						<button
-							onClick={() => handleCategoryChange(null)}
-							className={`px-4 py-2 rounded-md shadow-md transition-colors ${
-								!activeCategory
-									? 'bg-amber-500 text-white'
-									: 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-							}`}
-						>
-							Все услуги
-						</button>
-
-						{categories.map(category => (
+				<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10'>
+					<div className='bg-white rounded-xl shadow-lg p-4 border border-gray-200'>
+						<div className='flex items-center mb-4'>
+							<div className='w-1 h-6 bg-orange-500 rounded mr-3'></div>
+							<h3 className='text-sm font-bold text-gray-700 uppercase tracking-wider'>Фильтр по категориям</h3>
+						</div>
+						<div className='flex flex-wrap gap-3'>
 							<button
-								key={category.id}
-								onClick={() => handleCategoryChange(category.id)}
-								className={`px-4 py-2 rounded-md shadow-md transition-colors ${
-									activeCategory === category.id
-										? 'bg-amber-500 text-white'
-										: 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+								onClick={() => handleCategoryChange(null)}
+								className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center ${
+									!activeCategory
+										? 'bg-gradient-to-r from-gray-800 to-gray-700 text-yellow-400 shadow-lg'
+										: 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
 								}`}
 							>
-								{category.name}
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+									<path d='M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' />
+								</svg>
+								Все услуги
 							</button>
-						))}
+
+							{categories.map(category => (
+								<button
+									key={category.id}
+									onClick={() => handleCategoryChange(category.id)}
+									className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center ${
+										activeCategory === category.id
+											? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg shadow-orange-500/30'
+											: 'bg-gray-100 text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:shadow-md'
+									}`}
+								>
+									<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+										<path fillRule='evenodd' d='M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z' clipRule='evenodd' />
+									</svg>
+									{category.name}
+								</button>
+							))}
+						</div>
 					</div>
 				</div>
 			)}
 
 			{/* Services content */}
 			<div className='max-w-7xl mx-auto px-4 pb-28 sm:px-6 lg:px-8 pt-4 relative'>
-				<div className='absolute -left-64 top-1/3 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl'></div>
-				<div className='absolute -right-64 bottom-1/3 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl'></div>
-
 				{loading ? (
-					<LoadingFallback />
+					<div className='flex justify-center items-center py-16'>
+						<div className='text-center'>
+							<div className='inline-block animate-spin rounded-full h-14 w-14 border-t-3 border-b-3 border-orange-500 mb-5'></div>
+							<p className='text-gray-700 font-bold text-lg'>Загрузка услуг...</p>
+						</div>
+					</div>
 				) : error ? (
 					<div className='text-center py-10'>
-						<p className='text-red-500 text-lg'>{error}</p>
+						<div className='bg-red-50 border border-red-200 rounded-lg p-6 inline-block'>
+							<svg xmlns='http://www.w3.org/2000/svg' className='h-12 w-12 text-red-400 mx-auto mb-3' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+								<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' />
+							</svg>
+							<p className='text-red-600 font-semibold'>{error}</p>
+						</div>
 					</div>
 				) : filteredServices.length === 0 ? (
-					<div className='text-center py-20'>
-						<p className='text-gray-500 text-xl'>
-							{activeCategory ? 'В данной категории нет доступных услуг' : 'Нет доступных услуг'}
-						</p>
+					<div className='text-center py-12'>
+						<div className='bg-gray-100 rounded-xl p-8 inline-block'>
+							<svg xmlns='http://www.w3.org/2000/svg' className='h-16 w-16 text-gray-300 mx-auto mb-4' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+								<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
+							</svg>
+							<p className='text-gray-500 text-xl font-semibold'>
+								{activeCategory ? 'В данной категории нет доступных услуг' : 'Нет доступных услуг'}
+							</p>
+						</div>
 					</div>
 				) : (
-					<div className='space-y-24 relative z-10'>
+					<div className='space-y-12 relative z-10'>
 						{filteredServices.map((service, index) => (
 							<div
 								key={service.id}
-								className={`lg:grid lg:grid-cols-12 lg:gap-10 items-center`}
+								className='group'
 								style={{ scrollMarginTop: '120px' }}
+								data-aos='fade-up'
+								data-aos-delay={100 * (index % 3)}
+								data-aos-duration='600'
 							>
-								{index % 2 === 0 ? (
-									<>
-										<div className='lg:col-span-5 space-y-5'>
-											<div className='inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gradient-to-r from-amber-50 to-amber-100 text-amber-800 border-l-4 border-l-amber-500'>
+								{/* Industrial service card */}
+								<div className='bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200'>
+									{/* Top accent bar */}
+									<div className='h-1.5 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500'></div>
+									
+									<div className={`lg:grid lg:grid-cols-12 lg:gap-0 ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
+										{/* Image section */}
+										<div className={`lg:col-span-5 ${index % 2 !== 0 ? 'lg:order-2' : 'lg:order-1'}`}>
+											<div className='relative h-72 lg:h-full min-h-[300px] bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100 overflow-hidden'>
+												{/* Grid pattern */}
+												<div className='absolute inset-0 opacity-[0.03]' style={{backgroundImage: 'linear-gradient(#1f2937 1px, transparent 1px), linear-gradient(90deg, #1f2937 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
+												
+												{/* Industrial badge */}
+												<div className='absolute top-4 left-4 z-10'>
+													<div className='bg-gray-800 text-yellow-400 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center shadow-lg'>
+														<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-1.5' viewBox='0 0 20 20' fill='currentColor'>
+															<path fillRule='evenodd' d='M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z' clipRule='evenodd' />
+														</svg>
+														Услуга
+													</div>
+												</div>
+												
+												{/* Service number badge */}
+												<div className='absolute bottom-4 right-4 z-10'>
+													<div className='w-12 h-12 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-full flex items-center justify-center shadow-lg'>
+														<span className='text-white font-black text-lg'>0{index + 1}</span>
+													</div>
+												</div>
+												
+												{imgErrors[`service-${service.id}`] || !service.image_url ? (
+													<div className='w-full h-full flex items-center justify-center p-6'>
+														{getFallbackIcon(index)}
+													</div>
+												) : (
+													<div className='relative w-full h-full transform duration-500 group-hover:scale-105'>
+														<Image
+															src={service.image_url}
+															alt={service.name}
+															fill
+															className='object-contain p-8'
+															onError={() => handleImageError(`service-${service.id}`)}
+														/>
+													</div>
+												)}
+											</div>
+										</div>
+										
+										{/* Content section */}
+										<div className={`lg:col-span-7 p-6 lg:p-8 flex flex-col justify-center ${index % 2 !== 0 ? 'lg:order-1' : 'lg:order-2'}`}>
+											{/* Category tag */}
+											<div className='inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-sm mb-4 w-fit'>
+												<svg xmlns='http://www.w3.org/2000/svg' className='h-3.5 w-3.5 mr-1.5' viewBox='0 0 20 20' fill='currentColor'>
+													<path fillRule='evenodd' d='M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z' clipRule='evenodd' />
+												</svg>
 												{(() => {
 													const category = categories.find(c => c.id === service.category_id)
-													return category
-														? category.name
-														: index === 0
-														? 'Изготовление'
-														: index === 2
-														? 'Комплектующие'
-														: index === 4
-														? 'Техобслуживание'
-														: 'Услуги'
+													return category ? category.name : 'Услуги'
 												})()}
 											</div>
-											<h2 className='text-2xl lg:text-3xl font-bold text-gray-800 group-hover:text-amber-700 transition-colors'>
+											
+											{/* Title */}
+											<h2 className='text-2xl lg:text-3xl font-black text-gray-800 group-hover:text-orange-600 transition-colors leading-tight'>
 												{service.name}
-												<div className='w-16 h-0.5 bg-gradient-to-r from-amber-500 to-amber-400 mt-2'></div>
 											</h2>
-											<p className='text-gray-600 text-base leading-relaxed'>
+											<div className='w-20 h-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-400 mt-3 rounded-full'></div>
+											
+											{/* Description */}
+											<p className='mt-4 text-gray-600 text-base leading-relaxed'>
 												{service.description}
 											</p>
-											<div className='pt-5 flex space-x-3'>
+											
+											{/* Features list */}
+											<div className='mt-5 grid grid-cols-2 gap-3'>
+												<div className='flex items-center text-sm text-gray-600'>
+													<div className='w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2'>
+														<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 text-green-600' viewBox='0 0 20 20' fill='currentColor'>
+															<path fillRule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clipRule='evenodd' />
+														</svg>
+													</div>
+													Гарантия качества
+												</div>
+												<div className='flex items-center text-sm text-gray-600'>
+													<div className='w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2'>
+														<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 text-green-600' viewBox='0 0 20 20' fill='currentColor'>
+															<path fillRule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clipRule='evenodd' />
+														</svg>
+													</div>
+													Опытные специалисты
+												</div>
+												<div className='flex items-center text-sm text-gray-600'>
+													<div className='w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2'>
+														<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 text-green-600' viewBox='0 0 20 20' fill='currentColor'>
+															<path fillRule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clipRule='evenodd' />
+														</svg>
+													</div>
+													Быстрые сроки
+												</div>
+												<div className='flex items-center text-sm text-gray-600'>
+													<div className='w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2'>
+														<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 text-green-600' viewBox='0 0 20 20' fill='currentColor'>
+															<path fillRule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clipRule='evenodd' />
+														</svg>
+													</div>
+													Доступные цены
+												</div>
+											</div>
+											
+											{/* Buttons */}
+											<div className='mt-6 flex flex-wrap gap-3'>
 												<Link
 													href='/contacts'
-													className='inline-flex items-center px-6 py-2.5 border border-amber-600 bg-gradient-to-r from-amber-600 to-amber-500 rounded-md text-white font-medium hover:from-amber-700 hover:to-amber-600 transition-all duration-300 shadow-sm group'
+													className='inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg text-white font-bold hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-xl'
 												>
-													<span className='flex items-center justify-center'>
-														Получить консультацию
-														<svg
-															xmlns='http://www.w3.org/2000/svg'
-															className='h-4 w-4 ml-2 transform transition-transform duration-500 group-hover:translate-x-1.5'
-															viewBox='0 0 20 20'
-															fill='currentColor'
-														>
-															<path
-																fillRule='evenodd'
-																d='M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z'
-																clipRule='evenodd'
-															/>
-														</svg>
-													</span>
+													<svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+														<path d='M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z' />
+													</svg>
+													Заказать услугу
 												</Link>
 
 												{service.category_id && (
 													<button
 														onClick={() => handleCategoryChange(service.category_id)}
-														className='inline-flex items-center px-6 py-2.5 border border-amber-400 bg-transparent text-amber-600 rounded-md font-medium hover:bg-amber-50 transition-all duration-300 shadow-sm'
+														className='inline-flex items-center px-6 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-orange-500 hover:text-orange-600 transition-all duration-300'
 													>
-														<span className='flex items-center justify-center'>Похожие услуги</span>
-													</button>
-												)}
-											</div>
-										</div>
-										<div className='mt-10 lg:mt-0 lg:col-span-7'>
-											<div className='relative overflow-hidden rounded-lg shadow-lg transition-all duration-300 group hover:shadow-xl transform hover:-translate-y-1'>
-												{/* Card background with refined gradient border */}
-												<div className='absolute inset-0 bg-gradient-to-br from-amber-300/30 via-transparent to-amber-400/30 rounded-lg z-0 transform transition-all duration-700 group-hover:rotate-1 group-hover:scale-[1.03]'></div>
-
-												{/* Main card body with improved background */}
-												<div className='relative flex flex-col h-full z-10 bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] rounded-lg m-[1px] border border-amber-100 transform transition-all duration-500 ease-out group-hover:scale-[1.02]'>
-													{imgErrors[`service-${service.id}`] || !service.image_url ? (
-														<div className='w-full h-80 flex items-center justify-center bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] p-6'>
-															{getFallbackIcon(index)}
-														</div>
-													) : (
-														<div className='relative w-full h-80'>
-															<div className='absolute inset-0 bg-gradient-to-t from-[#E2E8F0]/50 to-transparent opacity-30'></div>
-															<Image
-																src={service.image_url}
-																alt={service.name}
-																fill
-																className='object-contain p-8 transform duration-700 ease-out group-hover:scale-105'
-																onError={() => handleImageError(`service-${service.id}`)}
-															/>
-															<div className='absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-amber-400/30 to-transparent'></div>
-														</div>
-													)}
-												</div>
-											</div>
-										</div>
-									</>
-								) : (
-									<>
-										<div className='lg:col-span-7 order-1 lg:order-1'>
-											<div className='relative overflow-hidden rounded-lg shadow-lg transition-all duration-300 group hover:shadow-xl transform hover:-translate-y-1 mt-10 lg:mt-0'>
-												{/* Card background with refined gradient border */}
-												<div className='absolute inset-0 bg-gradient-to-br from-amber-300/30 via-transparent to-amber-400/30 rounded-lg z-0 transform transition-all duration-700 group-hover:rotate-1 group-hover:scale-[1.03]'></div>
-
-												{/* Main card body with improved background */}
-												<div className='relative flex flex-col h-full z-10 bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] rounded-lg m-[1px] border border-amber-100 transform transition-all duration-500 ease-out group-hover:scale-[1.02]'>
-													{imgErrors[`service-${service.id}`] || !service.image_url ? (
-														<div className='w-full h-80 flex items-center justify-center bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] p-6'>
-															{getFallbackIcon(index)}
-														</div>
-													) : (
-														<div className='relative w-full h-80'>
-															<div className='absolute inset-0 bg-gradient-to-t from-[#E2E8F0]/50 to-transparent opacity-30'></div>
-															<Image
-																src={service.image_url}
-																alt={service.name}
-																fill
-																className='object-contain p-8 transform duration-700 ease-out group-hover:scale-105'
-																onError={() => handleImageError(`service-${service.id}`)}
-															/>
-															<div className='absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-amber-400/30 to-transparent'></div>
-														</div>
-													)}
-												</div>
-											</div>
-										</div>
-										<div className='lg:col-span-5 space-y-5 order-2 lg:order-2'>
-											<div className='inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gradient-to-r from-amber-50 to-amber-100 text-amber-800 border-l-4 border-l-amber-500'>
-												{(() => {
-													const category = categories.find(c => c.id === service.category_id)
-													return category
-														? category.name
-														: index === 0
-														? 'Изготовление'
-														: index === 2
-														? 'Комплектующие'
-														: index === 4
-														? 'Техобслуживание'
-														: 'Услуги'
-												})()}
-											</div>
-											<h2 className='text-2xl lg:text-3xl font-bold text-gray-800 group-hover:text-amber-700 transition-colors'>
-												{service.name}
-												<div className='w-16 h-0.5 bg-gradient-to-r from-amber-500 to-amber-400 mt-2'></div>
-											</h2>
-											<p className='text-gray-600 text-base leading-relaxed'>
-												{service.description}
-											</p>
-											<div className='pt-5 flex space-x-3'>
-												<Link
-													href='/contacts'
-													className='inline-flex items-center px-6 py-2.5 border border-amber-600 bg-gradient-to-r from-amber-600 to-amber-500 rounded-md text-white font-medium hover:from-amber-700 hover:to-amber-600 transition-all duration-300 shadow-sm group'
-												>
-													<span className='flex items-center justify-center'>
-														Получить консультацию
-														<svg
-															xmlns='http://www.w3.org/2000/svg'
-															className='h-4 w-4 ml-2 transform transition-transform duration-500 group-hover:translate-x-1.5'
-															viewBox='0 0 20 20'
-															fill='currentColor'
-														>
-															<path
-																fillRule='evenodd'
-																d='M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z'
-																clipRule='evenodd'
-															/>
+														<svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+															<path d='M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' />
 														</svg>
-													</span>
-												</Link>
-
-												{service.category_id && (
-													<button
-														onClick={() => handleCategoryChange(service.category_id)}
-														className='inline-flex items-center px-6 py-2.5 border border-amber-400 bg-transparent text-amber-600 rounded-md font-medium hover:bg-amber-50 transition-all duration-300 shadow-sm'
-													>
-														<span className='flex items-center justify-center'>Похожие услуги</span>
+														Похожие услуги
 													</button>
 												)}
 											</div>
 										</div>
-									</>
-								)}
+									</div>
+									
+									{/* Bottom bar */}
+									<div className='h-1 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700'></div>
+								</div>
 							</div>
 						))}
 					</div>
 				)}
+
+				{/* Industrial-style footer CTA */}
+				<div className='mt-20' data-aos='fade-up' data-aos-delay='300'>
+					<div className='bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 rounded-2xl p-8 md:p-12 text-center relative overflow-hidden'>
+						{/* Grid pattern */}
+						<div className='absolute inset-0 opacity-5' style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '30px 30px'}}></div>
+						
+						{/* Accent glow */}
+						<div className='absolute -left-10 top-1/2 w-32 h-32 bg-orange-500/30 rounded-full blur-3xl'></div>
+						<div className='absolute -right-10 top-1/2 w-32 h-32 bg-yellow-500/20 rounded-full blur-3xl'></div>
+						
+						<div className='relative'>
+							<div className='inline-flex items-center justify-center mb-4'>
+								<div className='w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg'>
+									<svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7 text-white' viewBox='0 0 20 20' fill='currentColor'>
+										<path d='M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z' />
+									</svg>
+								</div>
+							</div>
+							<h3 className='text-xl md:text-2xl font-bold text-white mb-3'>
+								Нужна консультация специалиста?
+							</h3>
+							<p className='text-gray-400 mb-6 max-w-xl mx-auto'>
+								Наши эксперты помогут подобрать оптимальное решение для вашего предприятия. Свяжитесь с нами для бесплатной консультации.
+							</p>
+							<div className='flex flex-wrap justify-center gap-4'>
+								<Link
+									href='/contacts'
+									className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40'
+								>
+									<svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+										<path d='M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z' />
+									</svg>
+									Связаться с нами
+								</Link>
+								<Link
+									href='/catalog'
+									className='inline-flex items-center px-8 py-4 bg-transparent border-2 border-gray-600 text-gray-300 font-bold rounded-lg hover:border-orange-500 hover:text-orange-400 transition-all duration-300'
+								>
+									<svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+										<path d='M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' />
+									</svg>
+									Смотреть каталог
+								</Link>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	)

@@ -12,9 +12,27 @@ interface Product {
 	title: string
 	description: string
 	image_url: string | null
-	price: number | null
+	price: number | string | null
 	category_id?: string | null
 	category_name?: string
+}
+
+// Helper function to format price (handles both number and string with "от")
+function formatPrice(price: number | string | null): string {
+	if (!price) return ''
+	
+	// If price is a string that already contains "от", just return it formatted
+	if (typeof price === 'string') {
+		const cleanPrice = price.replace(/от\s*/gi, '').trim()
+		const numPrice = parseFloat(cleanPrice.replace(/\s/g, ''))
+		if (!isNaN(numPrice)) {
+			return `от ${numPrice.toLocaleString()} сум`
+		}
+		return price
+	}
+	
+	// If price is a number, format it
+	return `от ${price.toLocaleString()} сум`
 }
 
 interface Category {
@@ -43,109 +61,122 @@ function CatalogItem({ item }: { item: Product }) {
 	}
 
 	return (
-		<div
-			className='group relative flex flex-col overflow-hidden h-[480px] perspective-1000'
-		>
-			{/* Card background with refined gradient border */}
-			<div className='absolute inset-0 bg-gradient-to-br from-amber-300/30 via-transparent to-amber-400/30 rounded-lg z-0 transform transition-all duration-700 group-hover:rotate-1 group-hover:scale-[1.03]'></div>
+		<div className='group relative flex flex-col overflow-hidden h-[520px]'>
+			{/* Industrial-style card */}
+			<div className='relative flex flex-col h-full bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border border-gray-200'>
+				
+				{/* Top industrial stripe */}
+				<div className='absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500 z-20'></div>
+				
+				{/* Industrial corner badge */}
+				<div className='absolute top-4 right-4 z-20'>
+					<div className='bg-gray-800 text-yellow-400 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider flex items-center shadow-lg'>
+						<svg xmlns='http://www.w3.org/2000/svg' className='h-3.5 w-3.5 mr-1' viewBox='0 0 20 20' fill='currentColor'>
+							<path fillRule='evenodd' d='M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z' clipRule='evenodd' />
+						</svg>
+						Кран
+					</div>
+				</div>
 
-			{/* Main card body with improved background */}
-			<div className='relative flex flex-col h-full z-10 bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0] rounded-lg m-[1px] border border-amber-100 transform transition-all duration-500 ease-out group-hover:scale-[1.02] group-hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)]'>
-				{/* Enhanced corner accent */}
-				<div className='absolute top-0 right-0 h-24 w-24 bg-gradient-to-br from-[#D1DBE7] to-[#C9D6E7] transform rotate-45 translate-x-12 -translate-y-12 z-0'></div>
-				<div className='absolute top-0 right-0 h-10 w-10 bg-amber-400/15 rounded-full blur-xl transform translate-x-3 translate-y-3 z-0'></div>
-
-				{/* Image container with improved reveal effect */}
-				<div className='h-64 relative overflow-hidden'>
-					<div className='absolute inset-0 bg-gradient-to-t from-[#E2E8F0]/90 via-[#EDF2F7]/50 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+				{/* Image container with industrial background */}
+				<div className='h-56 relative overflow-hidden bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100'>
+					{/* Industrial grid pattern */}
+					<div className='absolute inset-0 opacity-[0.03]' style={{backgroundImage: 'linear-gradient(#1f2937 1px, transparent 1px), linear-gradient(90deg, #1f2937 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
+					
+					{/* Crane hook decorative element */}
+					<div className='absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gray-400 z-10'></div>
+					<div className='absolute top-6 left-1/2 transform -translate-x-1/2 w-3 h-3 border-2 border-gray-400 rounded-full z-10'></div>
 
 					{imageError || !item.image_url ? (
-						<div className='w-full h-full flex items-center justify-center bg-gradient-to-b from-[#EDF2F7] to-[#E2E8F0]'>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								className='h-20 w-20 text-amber-400/50'
-								fill='none'
-								viewBox='0 0 24 24'
-								stroke='currentColor'
-							>
-								<path
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									strokeWidth={1.5}
-									d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
-								/>
-							</svg>
+						<div className='w-full h-full flex items-center justify-center'>
+							<div className='text-center'>
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-16 w-16 text-gray-300 mx-auto' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+									<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1} d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' />
+								</svg>
+								<p className='mt-2 text-xs text-gray-400'>Фото недоступно</p>
+							</div>
 						</div>
 					) : (
-						<div className='relative w-full h-full transform duration-700 ease-out group-hover:scale-105'>
-							<div className='absolute inset-0 bg-gradient-to-t from-[#E2E8F0]/50 to-transparent opacity-30'></div>
+						<div className='relative w-full h-full transform duration-500 ease-out group-hover:scale-110'>
 							<Image
 								src={item.image_url}
 								alt={item.title}
 								fill
-								className='object-contain p-6'
+								className='object-contain p-4'
 								onError={handleImageError}
 								loading='lazy'
 								sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
 							/>
-							<div className='absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-400/30 to-transparent'></div>
 						</div>
 					)}
+					
+					{/* Bottom fade */}
+					<div className='absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent'></div>
 				</div>
 
-				{/* Content with improved styling */}
-				<div className='flex-1 p-7 flex flex-col relative z-10'>
-					<div className='absolute left-7 top-0 w-12 h-0.5 bg-gradient-to-r from-amber-400 to-transparent transform -translate-y-1 transition-all duration-500 group-hover:w-24'></div>
-
+				{/* Content area */}
+				<div className='flex-1 p-5 flex flex-col bg-white relative'>
+					{/* Industrial accent line */}
+					<div className='absolute top-0 left-5 right-5 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent'></div>
+					
 					<div className='flex-1'>
-						<h3 className='text-xl font-medium text-gray-700 group-hover:text-amber-700 transition-colors'>
-							<Link
-								href={`/catalog/${item.id}`}
-								className='block transform transition-all duration-500 group-hover:translate-x-1'
-							>
+						{/* Title */}
+						<h3 className='text-lg font-bold text-gray-800 group-hover:text-orange-600 transition-colors leading-tight'>
+							<Link href={`/catalog/${item.id}`} className='block'>
 								{item.title}
-								<span className='absolute -left-3 top-1.5 w-0 h-5 bg-amber-400/20 transform transition-all duration-500 group-hover:w-1'></span>
 							</Link>
 						</h3>
+						
+						{/* Category tag */}
 						{item.category_name && (
-							<p className='text-sm text-amber-500 mt-1'>{item.category_name}</p>
+							<div className='mt-2 inline-flex items-center'>
+								<span className='w-2 h-2 bg-orange-500 rounded-full mr-2'></span>
+								<span className='text-xs font-semibold text-orange-600 uppercase tracking-wide'>{item.category_name}</span>
+							</div>
 						)}
-						<p className='mt-4 text-sm text-gray-500 line-clamp-3 transition-all duration-500 group-hover:text-gray-600'>
+						
+						{/* Description */}
+						<p className='mt-3 text-sm text-gray-500 line-clamp-2 leading-relaxed'>
 							{item.description}
 						</p>
+						
+						{/* Price with industrial styling */}
 						{item.price && (
-							<p className='mt-3 text-amber-600 font-semibold'>
-								от {item.price.toLocaleString()} сум
-							</p>
+							<div className='mt-4 flex items-center'>
+								<div className='bg-gradient-to-r from-gray-800 to-gray-700 px-4 py-2 rounded-lg shadow-md'>
+									<span className='text-yellow-400 font-bold text-lg'>
+										{formatPrice(item.price)}
+									</span>
+								</div>
+							</div>
 						)}
 					</div>
 
-					{/* Improved button with animated border */}
-					<div className='mt-7 relative'>
-						<div className='absolute inset-0 bg-gradient-to-r from-amber-500/40 via-amber-400/40 to-amber-500/40 rounded-md blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+					{/* CTA Button with industrial style */}
+					<div className='mt-5'>
 						<Link
 							href={`/catalog/${item.id}`}
-							className='relative block text-center py-3.5 rounded-md text-sm font-medium text-white bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-500 overflow-hidden group-hover:from-amber-600 group-hover:to-amber-500 group-hover:text-white z-10 shadow-sm'
+							className='relative flex items-center justify-center w-full py-3.5 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg text-white font-bold uppercase tracking-wide text-sm shadow-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 overflow-hidden group/btn'
 						>
-							<span className='relative z-10 flex items-center justify-center'>
+							{/* Animated shine effect */}
+							<span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700'></span>
+							
+							<span className='relative flex items-center'>
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+									<path d='M10 12a2 2 0 100-4 2 2 0 000 4z' />
+									<path fillRule='evenodd' d='M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z' clipRule='evenodd' />
+								</svg>
 								Подробнее
-								<svg
-									xmlns='http://www.w3.org/2000/svg'
-									className='h-4.5 w-4.5 ml-2 transform transition-transform duration-500 group-hover:translate-x-1.5'
-									viewBox='0 0 20 20'
-									fill='currentColor'
-								>
-									<path
-										fillRule='evenodd'
-										d='M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z'
-										clipRule='evenodd'
-									/>
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform' viewBox='0 0 20 20' fill='currentColor'>
+									<path fillRule='evenodd' d='M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z' clipRule='evenodd' />
 								</svg>
 							</span>
-							<span className='absolute bottom-0 left-0 w-0 h-0.5 bg-white/60 transition-all duration-700 group-hover:w-full'></span>
 						</Link>
 					</div>
 				</div>
+				
+				{/* Bottom industrial stripe */}
+				<div className='h-1 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700'></div>
 			</div>
 		</div>
 	)
@@ -235,114 +266,161 @@ function CatalogContent() {
 	}
 
 	return (
-		<div className='bg-gradient-to-b from-[#F5F7FA] to-[#EFF6FF] min-h-screen overflow-hidden'>
-			{/* Enhanced header with improved design elements */}
-			<div className='relative overflow-hidden'>
-				<div className='absolute inset-0 bg-gradient-to-r from-[#ECF0F1] to-[#F8F9FA]/50 opacity-70'></div>
-				<div className="absolute inset-0 bg-[url('/img/services/catalog-background.png')] bg-cover bg-center opacity-5 mix-blend-overlay"></div>
-				<div className='absolute right-0 top-0 w-64 md:w-96 h-64 md:h-96 bg-amber-50/70 rounded-full opacity-40 blur-3xl -translate-x-1/3 -translate-y-1/2'></div>
-				<div className='absolute left-0 bottom-0 w-64 md:w-96 h-64 md:h-96 bg-amber-50/70 rounded-full opacity-40 blur-3xl translate-x-1/3 translate-y-1/2'></div>
-				<div className='absolute left-1/4 top-1/3 w-32 h-32 bg-amber-100/50 rounded-full opacity-30 blur-xl'></div>
+		<div className='bg-gradient-to-b from-slate-100 to-gray-50 min-h-screen overflow-hidden'>
+			{/* Industrial-themed header */}
+			<div className='relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
+				{/* Industrial grid pattern */}
+				<div className='absolute inset-0 opacity-5' style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
+				
+				{/* Diagonal stripes accent */}
+				<div className='absolute top-0 right-0 w-96 h-96 opacity-10'>
+					<div className='absolute inset-0' style={{backgroundImage: 'repeating-linear-gradient(45deg, #f59e0b, #f59e0b 2px, transparent 2px, transparent 20px)'}}></div>
+				</div>
+				
+				{/* Orange accent glow */}
+				<div className='absolute -left-20 top-1/2 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl'></div>
+				<div className='absolute -right-20 bottom-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl'></div>
 
-				<div className='max-w-7xl mx-auto py-20 px-4 sm:py-28 sm:px-6 lg:px-8 relative'>
-					<div className='absolute w-24 h-24 bg-amber-100/80 rounded-full blur-2xl -left-10 top-20 opacity-60'></div>
-					<div className='absolute w-40 h-40 bg-amber-100/80 rounded-full blur-2xl right-10 top-40 opacity-60'></div>
-
+				<div className='max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 relative'>
 					<div className='text-center relative'>
-						<div className='inline-block mx-auto mb-4' data-aos='fade-up' data-aos-duration='800'>
-							<div className='w-16 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto mb-1 rounded-full'></div>
-							<div className='w-10 h-1 bg-gradient-to-r from-amber-400 to-amber-500 mx-auto rounded-full'></div>
+						{/* Industrial icon */}
+						<div className='inline-flex items-center justify-center mb-6' data-aos='fade-up' data-aos-duration='800'>
+							<div className='w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30'>
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-8 w-8 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+									<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' />
+								</svg>
+							</div>
 						</div>
+						
 						<h1
-							className='text-3xl font-bold text-gray-800 sm:text-5xl tracking-tight'
+							className='text-3xl font-black text-white sm:text-5xl tracking-tight uppercase'
 							data-aos='fade-up'
 							data-aos-delay='100'
 						>
-							<span className='inline-block border-b-2 border-amber-400 pb-2'>
-								Каталог продукции
-							</span>
+							Каталог <span className='text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400'>оборудования</span>
 						</h1>
+						
+						{/* Industrial underline */}
+						<div className='flex items-center justify-center mt-4 space-x-2' data-aos='fade-up' data-aos-delay='150'>
+							<div className='w-12 h-1 bg-gray-600 rounded'></div>
+							<div className='w-24 h-1.5 bg-gradient-to-r from-orange-500 to-yellow-500 rounded'></div>
+							<div className='w-12 h-1 bg-gray-600 rounded'></div>
+						</div>
+						
 						<p
-							className='mt-7 max-w-2xl mx-auto text-base text-gray-600 leading-relaxed'
+							className='mt-6 max-w-2xl mx-auto text-base text-gray-300 leading-relaxed'
 							data-aos='fade-up'
 							data-aos-delay='200'
 						>
-							Ознакомьтесь с нашей премиальной линейкой грузоподъемного оборудования, разработанного
-							для решения самых сложных промышленных задач
+							Надёжное грузоподъёмное оборудование для промышленных предприятий. 
+							<span className='text-orange-400 font-semibold'> Краны, тали, запчасти</span> — всё для вашего производства.
 						</p>
+						
+						{/* Stats row */}
+						<div className='mt-10 flex flex-wrap justify-center gap-8' data-aos='fade-up' data-aos-delay='300'>
+							<div className='text-center'>
+								<div className='text-3xl font-black text-orange-400'>50+</div>
+								<div className='text-xs text-gray-400 uppercase tracking-wider'>Моделей</div>
+							</div>
+							<div className='text-center'>
+								<div className='text-3xl font-black text-yellow-400'>10+</div>
+								<div className='text-xs text-gray-400 uppercase tracking-wider'>Лет опыта</div>
+							</div>
+							<div className='text-center'>
+								<div className='text-3xl font-black text-orange-400'>100%</div>
+								<div className='text-xs text-gray-400 uppercase tracking-wider'>Гарантия</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				{/* Decorative elements */}
-				<div className='absolute left-0 bottom-0 w-full h-8 bg-gradient-to-b from-transparent to-[#EFF6FF]/80'></div>
-				<div className='absolute left-0 right-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-200/30 to-transparent'></div>
+				{/* Bottom edge */}
+				<div className='absolute left-0 right-0 bottom-0 h-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500'></div>
 			</div>
 
-			{/* Product Category Filter - using buttons with onClick instead of Links */}
+			{/* Industrial-style category filter */}
 			{categories.length > 0 && !loading && !error && (
-				<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-					<div className='flex flex-wrap justify-center gap-4'>
-						<button
-							onClick={() => handleCategoryChange(null)}
-							className={`px-4 py-2 rounded-md shadow-md transition-colors ${
-								!activeCategory
-									? 'bg-amber-500 text-white'
-									: 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-							}`}
-						>
-							Все продукты
-						</button>
-
-						{categories.map(category => (
+				<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10'>
+					<div className='bg-white rounded-xl shadow-lg p-4 border border-gray-200'>
+						<div className='flex items-center mb-4'>
+							<div className='w-1 h-6 bg-orange-500 rounded mr-3'></div>
+							<h3 className='text-sm font-bold text-gray-700 uppercase tracking-wider'>Фильтр по категориям</h3>
+						</div>
+						<div className='flex flex-wrap gap-3'>
 							<button
-								key={category.id}
-								onClick={() => handleCategoryChange(category.id)}
-								className={`px-4 py-2 rounded-md shadow-md transition-colors ${
-									activeCategory === category.id
-										? 'bg-amber-500 text-white'
-										: 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+								onClick={() => handleCategoryChange(null)}
+								className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center ${
+									!activeCategory
+										? 'bg-gradient-to-r from-gray-800 to-gray-700 text-yellow-400 shadow-lg'
+										: 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
 								}`}
 							>
-								{category.name}
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+									<path d='M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' />
+								</svg>
+								Все
 							</button>
-						))}
+
+							{categories.map(category => (
+								<button
+									key={category.id}
+									onClick={() => handleCategoryChange(category.id)}
+									className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center ${
+										activeCategory === category.id
+											? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg shadow-orange-500/30'
+											: 'bg-gray-100 text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:shadow-md'
+									}`}
+								>
+									<svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+										<path fillRule='evenodd' d='M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z' clipRule='evenodd' />
+									</svg>
+									{category.name}
+								</button>
+							))}
+						</div>
 					</div>
 				</div>
 			)}
 
-			{/* Enhanced catalog grid with improved styling */}
+			{/* Industrial-themed catalog grid */}
 			<div className='max-w-7xl mx-auto px-4 pb-28 sm:px-6 lg:px-8 pt-4 relative overflow-hidden'>
-				{/* Adjust decorative elements to prevent overflow on smaller screens */}
-				<div className='absolute sm:-left-32 md:-left-64 top-1/3 w-64 md:w-96 h-64 md:h-96 bg-amber-100/20 rounded-full blur-3xl'></div>
-				<div className='absolute sm:-right-32 md:-right-64 bottom-1/3 w-64 md:w-96 h-64 md:h-96 bg-amber-100/20 rounded-full blur-3xl'></div>
-
 				{loading ? (
 					<div className='flex justify-center items-center py-16'>
 						<div className='text-center'>
-							<div className='inline-block animate-spin rounded-full h-14 w-14 border-t-2 border-b-2 border-amber-600 mb-5'></div>
-							<p className='text-gray-700 font-medium text-lg'>Загрузка продуктов...</p>
+							<div className='inline-block animate-spin rounded-full h-14 w-14 border-t-3 border-b-3 border-orange-500 mb-5'></div>
+							<p className='text-gray-700 font-bold text-lg'>Загрузка оборудования...</p>
 						</div>
 					</div>
 				) : error ? (
 					<div className='text-center py-10'>
-						<p className='text-red-500 text-lg'>{error}</p>
+						<div className='bg-red-50 border border-red-200 rounded-lg p-6 inline-block'>
+							<svg xmlns='http://www.w3.org/2000/svg' className='h-12 w-12 text-red-400 mx-auto mb-3' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+								<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' />
+							</svg>
+							<p className='text-red-600 font-semibold'>{error}</p>
+						</div>
 					</div>
 				) : filteredProducts.length === 0 ? (
 					<div className='text-center py-12'>
-						<p className='text-gray-500 text-xl'>
-							{activeCategory
-								? 'В данной категории нет доступных продуктов'
-								: 'Нет доступных продуктов'}
-						</p>
+						<div className='bg-gray-100 rounded-xl p-8 inline-block'>
+							<svg xmlns='http://www.w3.org/2000/svg' className='h-16 w-16 text-gray-300 mx-auto mb-4' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+								<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4' />
+							</svg>
+							<p className='text-gray-500 text-xl font-semibold'>
+								{activeCategory
+									? 'В данной категории нет доступных продуктов'
+									: 'Нет доступных продуктов'}
+							</p>
+						</div>
 					</div>
 				) : (
-					<div className='grid gap-8 sm:gap-12 sm:grid-cols-2 lg:grid-cols-3 relative z-10'>
+					<div className='grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 relative z-10'>
 						{filteredProducts.map((item, index) => (
 							<div
 								key={item.id}
 								data-aos='fade-up'
-								data-aos-delay={150 * (index + 1)}
-								data-aos-duration='800'
+								data-aos-delay={100 * (index % 3 + 1)}
+								data-aos-duration='600'
 							>
 								<CatalogItem item={item} />
 							</div>
@@ -350,16 +428,34 @@ function CatalogContent() {
 					</div>
 				)}
 
-				{/* Enhanced footer with improved styling */}
-				<div className='mt-24 text-center relative' data-aos='fade-up' data-aos-delay='300'>
-					<div className='relative inline-block'>
-						<div className='absolute left-1/2 top-0 w-32 h-px bg-gradient-to-r from-transparent via-amber-300 to-transparent transform -translate-x-1/2 -translate-y-12'></div>
-						<div className='absolute left-1/2 top-0 w-16 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent transform -translate-x-1/2 -translate-y-8'></div>
+				{/* Industrial-style footer CTA */}
+				<div className='mt-20' data-aos='fade-up' data-aos-delay='300'>
+					<div className='bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 rounded-2xl p-8 md:p-12 text-center relative overflow-hidden'>
+						{/* Grid pattern */}
+						<div className='absolute inset-0 opacity-5' style={{backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '30px 30px'}}></div>
+						
+						{/* Accent glow */}
+						<div className='absolute -left-10 top-1/2 w-32 h-32 bg-orange-500/30 rounded-full blur-3xl'></div>
+						<div className='absolute -right-10 top-1/2 w-32 h-32 bg-yellow-500/20 rounded-full blur-3xl'></div>
+						
+						<div className='relative'>
+							<h3 className='text-xl md:text-2xl font-bold text-white mb-3'>
+								Не нашли нужное оборудование?
+							</h3>
+							<p className='text-gray-400 mb-6 max-w-xl mx-auto'>
+								Представлены не все модели. Свяжитесь с нами для получения полного каталога и индивидуального предложения.
+							</p>
+							<Link
+								href='/contacts'
+								className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40'
+							>
+								<svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-2' viewBox='0 0 20 20' fill='currentColor'>
+									<path d='M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z' />
+								</svg>
+								Связаться с нами
+							</Link>
+						</div>
 					</div>
-					<p className='text-gray-500 text-sm'>
-						Представлены не все модели. Для получения полной информации, пожалуйста, свяжитесь с
-						нашими специалистами.
-					</p>
 				</div>
 			</div>
 		</div>
