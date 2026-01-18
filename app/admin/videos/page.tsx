@@ -27,7 +27,7 @@ interface Photo {
   created_at: string;
 }
 
-const SUPABASE_URL = 'https://rgpdolopvlfdiutwlvow.supabase.co';
+const SUPABASE_URL = 'https://qkvgjrywutnudwcoekmf.supabase.co';
 
 // Extract YouTube video ID from various URL formats
 function extractYouTubeId(url: string): string | null {

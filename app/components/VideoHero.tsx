@@ -3,7 +3,7 @@
 import React from 'react';
 
 // URL видео из Supabase Storage
-const SUPABASE_VIDEO_URL = 'https://rgpdolopvlfdiutwlvow.supabase.co/storage/v1/object/public/video/video-header.mp4';
+const SUPABASE_VIDEO_URL = 'https://qkvgjrywutnudwcoekmf.supabase.co/storage/v1/object/public/video/video-header.mp4';
 
 export default function VideoHero() {
   return (

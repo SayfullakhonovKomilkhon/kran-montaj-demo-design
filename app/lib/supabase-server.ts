@@ -5,8 +5,8 @@ export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
   
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://rgpdolopvlfdiutwlvow.supabase.co',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJncGRvbG9wdmxmZGl1dHdsdm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzg2MzEsImV4cCI6MjA3OTkxNDYzMX0.aXW3FbtyBik86D22UOvKmMmywMa1RkpqOF360JmNzyE',
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qkvgjrywutnudwcoekmf.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrdmdqcnl3dXRudWR3Y29la21mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NDM2NTYsImV4cCI6MjA4NDMxOTY1Nn0.Ztu7mFeaaZq8Cp4NrKLtzc4C3MqU_f9uxd3ExGmlsvM',
     {
       cookies: {
         get(name) {

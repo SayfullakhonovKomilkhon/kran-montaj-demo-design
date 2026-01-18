@@ -24,7 +24,7 @@ interface PhotoFile {
   created_at: string;
 }
 
-const SUPABASE_URL = 'https://rgpdolopvlfdiutwlvow.supabase.co';
+const SUPABASE_URL = 'https://qkvgjrywutnudwcoekmf.supabase.co';
 
 interface VideoData {
   video_type: 'file' | 'url' | 'youtube';
