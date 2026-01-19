@@ -1,11 +1,17 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
-// URL видео из Supabase Storage
+// Локальное видео (fallback) и Supabase Storage
+const LOCAL_VIDEO_URL = '/video/hero-video.mp4';
 const SUPABASE_VIDEO_URL = 'https://qkvgjrywutnudwcoekmf.supabase.co/storage/v1/object/public/video/video-header.mp4';
 
 export default function VideoHero() {
+  const [videoError, setVideoError] = useState(false);
+  
+  // Используем локальное видео как основной источник, Supabase как fallback
+  const videoUrl = videoError ? SUPABASE_VIDEO_URL : LOCAL_VIDEO_URL;
+  
   return (
     <div className="relative min-h-screen w-full overflow-hidden -mt-[120px] md:-mt-[130px]">
       {/* Video background */}
@@ -16,8 +22,9 @@ export default function VideoHero() {
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover"
         style={{ zIndex: -1 }}
+        onError={() => setVideoError(true)}
       >
-        <source src={SUPABASE_VIDEO_URL} type="video/mp4" />
+        <source src={videoUrl} type="video/mp4" />
       </video>
       
       {/* Dark industrial overlay */}

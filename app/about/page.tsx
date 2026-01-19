@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaCheck, FaUsers, FaClock, FaTools, FaAward, FaMedal, FaCertificate, FaShield } from 'react-icons/fa';
+import { FaCheck, FaUsers, FaClock, FaTools, FaAward, FaMedal, FaCertificate, FaShieldAlt } from 'react-icons/fa';
 import { supabase } from '../lib/supabase';
 
 interface AboutContent {
@@ -25,7 +25,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   FaTools,
   FaUsers,
   FaClock,
-  FaShield,
+  FaShieldAlt,
+  FaShield: FaShieldAlt, // alias for backwards compatibility
   FaCheck,
   FaMedal,
 };
@@ -54,32 +55,11 @@ function isAdvantageBlock(key: string): boolean {
 
 export default function AboutPage() {
   // Animation on scroll
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   
   // Content from database
   const [aboutContent, setAboutContent] = useState<AboutContent[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
 
   // Fetch content from Supabase
   useEffect(() => {

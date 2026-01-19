@@ -63,19 +63,24 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
 
 	const signIn = async (email: string, password: string) => {
 		try {
+			console.log('Attempting sign in with email:', email)
+			
 			const { data, error } = await supabase.auth.signInWithPassword({
-				email,
-				password,
+				email: email.trim().toLowerCase(),
+				password: password,
 			})
 
 			if (error) {
 				console.error('Sign in error:', error)
+				console.error('Error code:', error.status)
+				console.error('Error message:', error.message)
 				return { error }
 			}
 
+			console.log('Sign in successful:', data.user?.email)
 			return { data }
 		} catch (error) {
-			console.error('Sign in error:', error)
+			console.error('Sign in catch error:', error)
 			return { error: { message: 'An unexpected error occurred' } }
 		}
 	}
