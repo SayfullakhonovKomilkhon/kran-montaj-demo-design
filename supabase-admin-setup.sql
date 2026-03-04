@@ -452,7 +452,7 @@ ON CONFLICT (name) DO UPDATE SET
 INSERT INTO public.system_settings (key, value, value_type, category, description, is_public) VALUES 
     ('site_name', 'КРАН-МОНТАЖ', 'string', 'general', 'Название сайта', true),
     ('site_description', 'Грузоподъемное оборудование - производство, монтаж, сервис', 'string', 'general', 'Описание сайта', true),
-    ('contact_email', 'info@kran-montaj.uz', 'string', 'contacts', 'Основной email для связи', true),
+    ('contact_email', 'kranmontajservis@mail.ru', 'string', 'contacts', 'Основной email для связи', true),
     ('contact_phone', '+998 71 123 45 67', 'string', 'contacts', 'Основной телефон', true),
     ('telegram_bot_token', '', 'string', 'telegram', 'Токен Telegram бота', false),
     ('telegram_chat_id', '', 'string', 'telegram', 'ID чата для уведомлений', false),

@@ -74,11 +74,11 @@ export default function Navbar() {
 							</Link>
 
 							<Link
-								href='mailto:info@kran-montaj.uz'
+								href='mailto:kranmontajservis@mail.ru'
 								className='flex items-center px-3 py-1 bg-gray-700 text-white hover:bg-gray-600 transition-all duration-300 rounded-md border border-gray-600'
 							>
 								<FaEnvelope className='mr-2 text-orange-400' />
-								<span>info@kran-montaj.uz</span>
+								<span>kranmontajservis@mail.ru</span>
 							</Link>
 						</div>
 					</div>

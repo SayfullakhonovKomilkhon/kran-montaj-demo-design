@@ -574,7 +574,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO public.contacts (type, value, label, "order", is_active) VALUES 
     ('phone', '+998 71 123 45 67', 'Основной телефон', 1, true),
     ('phone', '+998 90 123 45 67', 'Мобильный', 2, true),
-    ('email', 'info@kran-montaj.uz', 'Основной email', 3, true),
+    ('email', 'kranmontajservis@mail.ru', 'Основной email', 3, true),
     ('email', 'sales@kran-montaj.uz', 'Отдел продаж', 4, true),
     ('address', 'г. Ташкент, ул. Мустакиллик, 100', 'Офис', 5, true),
     ('hours', 'Пн-Пт: 9:00 - 18:00, Сб: 9:00 - 14:00', 'Режим работы', 6, true),
